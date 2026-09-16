@@ -70,7 +70,7 @@ const calculateNOAAHeatIndex = (tempC: number, rh: number): number => {
   return (HI - 32) * 5 / 9;
 };
 
-const HeatIndexCard = ({ temp, rh }: { temp: number, rh: number }) => {
+const HeatIndexCard = ({ temp, rh, locationName }: { temp: number, rh: number, locationName?: string }) => {
   const apparentTemp = calculateNOAAHeatIndex(temp, rh);
   const feelsLike = Math.round(apparentTemp);
 
@@ -79,14 +79,22 @@ const HeatIndexCard = ({ temp, rh }: { temp: number, rh: number }) => {
       <div className="bg-white rounded-2xl p-5 shadow-md border border-slate-200/80 relative group hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
         <div className="relative z-10 flex flex-col items-center text-center">
           {/* Header Row */}
-          <div className="flex items-center justify-between w-full mb-2">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50/80 text-blue-700 text-[10px] font-extrabold uppercase tracking-wider border border-blue-100 shadow-2xs">
+          <div className="flex items-center justify-between w-full mb-2 gap-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50/80 text-blue-700 text-[10px] font-extrabold uppercase tracking-wider border border-blue-100 shadow-2xs shrink-0">
               <span className="material-symbols-outlined text-[14px] text-blue-600">thermostat</span>
               Suhu Terasa
             </div>
 
+            {/* Location Badge */}
+            {locationName && (
+              <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100/90 text-slate-800 text-[10.5px] font-bold border border-slate-200/80 shadow-2xs max-w-[170px] truncate">
+                <span className="material-symbols-outlined text-[13px] text-blue-600 shrink-0">location_on</span>
+                <span className="truncate">{locationName}</span>
+              </div>
+            )}
+
             {/* Refined Blue Info Icon Button */}
-            <div className="relative group/info cursor-pointer outline-none" tabIndex={0} onClick={(e) => e.currentTarget.focus()}>
+            <div className="relative group/info cursor-pointer outline-none shrink-0" tabIndex={0} onClick={(e) => e.currentTarget.focus()}>
               <div className="w-6 h-6 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center border border-blue-200/80 transition-all cursor-pointer shadow-2xs">
                 <span className="material-symbols-outlined text-[14px] font-bold">info</span>
               </div>
@@ -98,7 +106,7 @@ const HeatIndexCard = ({ temp, rh }: { temp: number, rh: number }) => {
                   Tentang Suhu Terasa
                 </div>
                 <div className="text-slate-600 font-medium leading-relaxed text-justify">
-                  Suhu terasa (Heat Index) ini dihitung menggunakan formula dari <strong>NOAA (National Oceanic and Atmospheric Administration)</strong>. Nilai ini menggambarkan suhu yang dirasakan tubuh berdasarkan kombinasi <strong>suhu udara</strong> dan <strong>kelembaban relatif</strong>.
+                  Suhu terasa (Heat Index) ini dihitung menggunakan formula dari <strong>NOAA (National Oceanic and Atmospheric Administration)</strong>. Nilai ini menggambarkan suhu yang dirasakan tubuh berdasarkan kombinasi <strong>suhu udara</strong> dan <strong>kelembaban relatif</strong>{locationName ? ` di ${locationName}` : ''}.
                 </div>
               </div>
             </div>
@@ -112,7 +120,9 @@ const HeatIndexCard = ({ temp, rh }: { temp: number, rh: number }) => {
             <span className="text-[1.5rem] font-bold text-slate-500">°C</span>
           </div>
 
-          <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-3">Sensasi Suhu yang Dirasakan</span>
+          <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-3 flex-wrap">
+            <span>Sensasi Suhu yang Dirasakan</span>
+          </div>
 
           {/* Sub-metrics Grid (2 Columns: Suhu Udara & Kelembaban) */}
           <div className="w-full grid grid-cols-2 gap-2 mt-1">
@@ -330,6 +340,8 @@ export default function Home() {
 
   const handleStationSelect = (tableName: string) => {
     setSelectedStation(tableName);
+    const st = stations.find(s => s.table_name === tableName);
+    if (st) setStationName(st.display_name || st.station_name);
     window.scrollTo({
       top: 0,
       behavior: "smooth"
@@ -501,7 +513,7 @@ export default function Home() {
                 Layanan digital terpadu Stasiun Klimatologi Jawa Timur. Menyajikan data observasi cuaca realtime, analisis iklim, dan informasi peringatan dini secara akurat untuk seluruh wilayah Jawa Timur.
               </p>
               
-              {/* INFORMASI KHUSUS — Eye-Catching Luminous Banner */}
+              {/* INFORMASI TERBARU — Eye-Catching Luminous Banner */}
               <div className="mt-3 lg:mt-4 p-3.5 sm:p-4 md:p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 border border-blue-400/40 shadow-xl shadow-blue-950/25 relative overflow-hidden group">
                 {/* Ambient Background Blur Haloes */}
                 <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-blue-500/20 rounded-full blur-2xl pointer-events-none" />
@@ -510,11 +522,11 @@ export default function Home() {
                 {/* Header Badge */}
                 <div className="flex items-center justify-between mb-3 relative z-10">
                   <div className="flex items-center gap-2">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/40 shadow-xs">
-                      <span className="material-symbols-outlined text-[15px] animate-pulse">auto_awesome</span>
+                    <span className="flex items-center justify-center w-6.5 h-6.5 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/40 shadow-xs">
+                      <span className="material-symbols-outlined text-[16px]">campaign</span>
                     </span>
                     <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-300 to-yellow-100 drop-shadow-xs">
-                      INFORMASI KHUSUS
+                      INFORMASI TERBARU
                     </span>
                   </div>
                   <span className="hidden sm:inline-block text-[10px] font-bold tracking-widest text-blue-200/70 uppercase">
@@ -581,7 +593,7 @@ export default function Home() {
           </div>
 
           <AnimatedContainer animation="slideInRight" delay={0.3} once={true} className="w-full lg:w-auto flex justify-center lg:justify-end shrink-0">
-            <HeatIndexCard temp={latestData?.temp ?? 0} rh={latestData?.rh ?? 0} />
+            <HeatIndexCard temp={latestData?.temp ?? 0} rh={latestData?.rh ?? 0} locationName={stationName} />
           </AnimatedContainer>
         </section>
 

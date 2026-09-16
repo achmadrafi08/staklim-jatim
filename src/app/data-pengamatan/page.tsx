@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedContainer } from "@/components/ui/animated-container";
 import { supabaseFetch } from "@/lib/supabase";
+import { fixDegreeSymbol } from "@/lib/utils";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, Legend
@@ -185,7 +186,8 @@ export default function PengamatanHarian() {
 
   const formatSectionContent = (text: string) => {
     if (!text) return "";
-    let formatted = text.replace(/:\s*(?=-)/g, ':\n');
+    let cleaned = fixDegreeSymbol(text);
+    let formatted = cleaned.replace(/:\s*(?=-)/g, ':\n');
     formatted = formatted.replace(/(?<!\n)(?:\s+-\s*|\s*,\s*-\s*)/g, '\n• ');
     return formatted.trim();
   };

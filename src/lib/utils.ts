@@ -32,6 +32,7 @@ export function getDirectImageUrl(url: string): string {
   return trimmed;
 }
 
+
 /**
  * Normalizes description content (HTML or plain text) for clean, beautiful typography rendering on all screens.
  */
@@ -56,4 +57,21 @@ export function formatDescriptionHtml(raw: string): string {
     })
     .join('');
 }
+
+/**
+ * Fixes corrupted degree symbols caused by multi-byte encoding mismatches (e.g. 15.5ËšC -> 15.5°C).
+ */
+export function fixDegreeSymbol(text: string): string {
+  if (!text) return "";
+  return text
+    .replace(/Ëš\s*C/gi, "°C")
+    .replace(/Ëš/gi, "°")
+    .replace(/Â°\s*C/gi, "°C")
+    .replace(/Â°/gi, "°")
+    .replace(/Ã‚Â°\s*C/gi, "°C")
+    .replace(/Ã‚Â°/gi, "°")
+    .replace(/Ë\s*C/gi, "°C")
+    .replace(/Ë\s*/gi, "°");
+}
+
 

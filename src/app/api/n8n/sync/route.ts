@@ -48,14 +48,27 @@ export async function POST(req: Request) {
     stationMap["stageof pasuruan"] = "aws_stageof_pasuruan";
 
     // 4. Fetch n8n Workflow
-    const n8nBaseUrl = process.env.N8N_BASE_URL;
-    const n8nWorkflowId = process.env.N8N_WORKFLOW_ID;
-    const n8nApiKey = process.env.N8N_API_KEY;
+    const cleanUrl = (rawUrl: string): string => {
+      if (!rawUrl) return "";
+      let url = rawUrl.trim();
+      const httpMatch = url.match(/https?:\/\/[^\s\)\]"]+/i);
+      if (httpMatch && httpMatch[0]) {
+        url = httpMatch[0];
+      }
+      url = url.replace(/\/+$/, "");
+      url = url.replace(/\/api\/v1$/i, "");
+      return `${url}/api/v1`;
+    };
+
+    const rawBaseUrl = process.env.N8N_BASE_URL || "https://n8n-gxebsloamboa.jkt3.sumopod.my.id";
+    const n8nBaseUrl = cleanUrl(rawBaseUrl);
+    const n8nWorkflowId = (process.env.N8N_WORKFLOW_ID || "YPHClsW8OzuOl26y").trim().replace(/^\[|\]$/g, "");
+    const n8nApiKey = (process.env.N8N_API_KEY || "").trim().replace(/^\[|\]$/g, "");
 
     if (!n8nBaseUrl || !n8nWorkflowId || !n8nApiKey) {
       return NextResponse.json(
         {
-          error: "Kredensial n8n belum diatur di server",
+          error: "Kredensial n8n belum diatur di server (N8N_API_KEY disyaratkan)",
           code: "N8N_NOT_CONFIGURED"
         },
         { status: 503 }
