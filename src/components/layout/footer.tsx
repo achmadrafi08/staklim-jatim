@@ -28,6 +28,18 @@ export function Footer() {
           <p className="text-border opacity-80 mt-[16px] text-[1rem] leading-[1.6]">
             Stasiun Klimatologi Jawa Timur menyediakan informasi cuaca, iklim, kualitas udara, dan gempa bumi yang akurat dan terpercaya.
           </p>
+
+          {/* WBK & ISO Badges */}
+          <div className="flex items-center gap-3 mt-2 pt-2 border-t border-white/10">
+            <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10" title="Kementerian PANRB - Zona Integritas (WBK)">
+              <Image src="/images/logo-wbk.png" alt="WBK Logo" width={28} height={28} className="h-7 w-auto object-contain" />
+              <span className="text-[11px] font-semibold text-white/90">WBK</span>
+            </div>
+            <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10" title="ISO 9001 Quality Management System">
+              <Image src="/images/logo-iso.png" alt="ISO 9001 Logo" width={22} height={28} className="h-7 w-auto object-contain bg-white rounded-xs p-0.5" />
+              <span className="text-[11px] font-semibold text-white/90">ISO 9001</span>
+            </div>
+          </div>
           <div className="text-border opacity-60 text-[0.875rem] mt-[32px]">
             © {new Date().getFullYear()} BMKG Stasiun Klimatologi Jawa Timur. Seluruh Hak Cipta Dilindungi.
           </div>

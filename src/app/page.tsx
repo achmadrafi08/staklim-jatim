@@ -501,31 +501,53 @@ export default function Home() {
                 Layanan digital terpadu Stasiun Klimatologi Jawa Timur. Menyajikan data observasi cuaca realtime, analisis iklim, dan informasi peringatan dini secara akurat untuk seluruh wilayah Jawa Timur.
               </p>
               
-              <div className="flex flex-row overflow-x-auto snap-x snap-mandatory gap-2.5 sm:gap-3.5 mt-6 mb-2 pb-2 sm:pb-0 sm:flex-wrap scrollbar-hide -mx-6 px-6 sm:mx-0 sm:px-0">
-                <Link href="/data-pengamatan" className="group shrink-0 snap-start">
-                  <div className="flex items-center gap-2 sm:gap-2.5 text-slate-700 hover:text-blue-600 transition-colors bg-white/80 hover:bg-white px-3.5 sm:px-4 py-2 rounded-full border border-slate-200/80 shadow-xs hover:shadow-md cursor-pointer whitespace-nowrap">
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0 group-hover:scale-110 transition-transform">
-                      <span className="material-symbols-outlined text-[16px] sm:text-[18px]">analytics</span>
+              <div className="mt-6">
+                <div className="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2.5 flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-[16px] text-primary">auto_awesome</span>
+                  Informasi Khusus:
+                </div>
+
+                <div className="flex flex-row overflow-x-auto snap-x snap-mandatory gap-2.5 sm:gap-3.5 mb-2 pb-2 sm:pb-0 sm:flex-wrap scrollbar-hide -mx-6 px-6 sm:mx-0 sm:px-0">
+                  {/* 1. E-Buletin */}
+                  <Link href="/publikasi/e-buletin" className="group shrink-0 snap-start">
+                    <div className="flex items-center gap-2 sm:gap-2.5 text-slate-700 hover:text-indigo-600 transition-colors bg-white/80 hover:bg-white px-3.5 sm:px-4 py-2 rounded-full border border-slate-200/80 shadow-xs hover:shadow-md cursor-pointer whitespace-nowrap">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 shrink-0 group-hover:scale-110 transition-transform">
+                        <span className="material-symbols-outlined text-[16px] sm:text-[18px]">menu_book</span>
+                      </div>
+                      <span className="text-xs sm:text-sm font-bold">E-Buletin</span>
                     </div>
-                    <span className="text-xs sm:text-sm font-bold">Data Pengamatan</span>
-                  </div>
-                </Link>
-                <Link href="/hari-tanpa-hujan" className="group shrink-0 snap-start">
-                  <div className="flex items-center gap-2 sm:gap-2.5 text-slate-700 hover:text-amber-600 transition-colors bg-white/80 hover:bg-white px-3.5 sm:px-4 py-2 rounded-full border border-slate-200/80 shadow-xs hover:shadow-md cursor-pointer whitespace-nowrap">
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 shrink-0 group-hover:scale-110 transition-transform">
-                      <span className="material-symbols-outlined text-[16px] sm:text-[18px]">wb_sunny</span>
+                  </Link>
+
+                  {/* 2. Prakiraan Hujan */}
+                  <Link href="/prakiraan-curah-hujan" className="group shrink-0 snap-start">
+                    <div className="flex items-center gap-2 sm:gap-2.5 text-slate-700 hover:text-teal-600 transition-colors bg-white/80 hover:bg-white px-3.5 sm:px-4 py-2 rounded-full border border-slate-200/80 shadow-xs hover:shadow-md cursor-pointer whitespace-nowrap">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-teal-50 flex items-center justify-center text-teal-600 shrink-0 group-hover:scale-110 transition-transform">
+                        <span className="material-symbols-outlined text-[16px] sm:text-[18px]">rainy</span>
+                      </div>
+                      <span className="text-xs sm:text-sm font-bold">Prakiraan Hujan</span>
                     </div>
-                    <span className="text-xs sm:text-sm font-bold">Hari Tanpa Hujan</span>
-                  </div>
-                </Link>
-                <Link href="/prakiraan-curah-hujan" className="group shrink-0 snap-start">
-                  <div className="flex items-center gap-2 sm:gap-2.5 text-slate-700 hover:text-teal-600 transition-colors bg-white/80 hover:bg-white px-3.5 sm:px-4 py-2 rounded-full border border-slate-200/80 shadow-xs hover:shadow-md cursor-pointer whitespace-nowrap">
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-teal-50 flex items-center justify-center text-teal-600 shrink-0 group-hover:scale-110 transition-transform">
-                      <span className="material-symbols-outlined text-[16px] sm:text-[18px]">rainy</span>
+                  </Link>
+
+                  {/* 3. Hari Tanpa Hujan */}
+                  <Link href="/hari-tanpa-hujan" className="group shrink-0 snap-start">
+                    <div className="flex items-center gap-2 sm:gap-2.5 text-slate-700 hover:text-amber-600 transition-colors bg-white/80 hover:bg-white px-3.5 sm:px-4 py-2 rounded-full border border-slate-200/80 shadow-xs hover:shadow-md cursor-pointer whitespace-nowrap">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 shrink-0 group-hover:scale-110 transition-transform">
+                        <span className="material-symbols-outlined text-[16px] sm:text-[18px]">wb_sunny</span>
+                      </div>
+                      <span className="text-xs sm:text-sm font-bold">Hari Tanpa Hujan</span>
                     </div>
-                    <span className="text-xs sm:text-sm font-bold">Prakiraan Hujan</span>
-                  </div>
-                </Link>
+                  </Link>
+
+                  {/* 4. Data Pengamatan */}
+                  <Link href="/data-pengamatan" className="group shrink-0 snap-start">
+                    <div className="flex items-center gap-2 sm:gap-2.5 text-slate-700 hover:text-blue-600 transition-colors bg-white/80 hover:bg-white px-3.5 sm:px-4 py-2 rounded-full border border-slate-200/80 shadow-xs hover:shadow-md cursor-pointer whitespace-nowrap">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0 group-hover:scale-110 transition-transform">
+                        <span className="material-symbols-outlined text-[16px] sm:text-[18px]">analytics</span>
+                      </div>
+                      <span className="text-xs sm:text-sm font-bold">Data Pengamatan</span>
+                    </div>
+                  </Link>
+                </div>
               </div>
             </AnimatedContainer>
           </div>
