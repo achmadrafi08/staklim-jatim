@@ -205,24 +205,23 @@ function DesktopDropdownItem({ item, activeRoute, level = 1 }: { item: NavItem; 
 
   if (item.subLinks) {
     return (
-      <div 
+      <div
         className="relative group/item"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <div 
-          className={`flex items-center justify-between transition-all duration-300 cursor-default ${
-            level === 1 
+        <div
+          className={`flex items-center justify-between transition-all duration-300 cursor-default ${level === 1
               ? `px-2.5 2xl:px-4 py-1.5 text-[12px] 2xl:text-[13px] font-bold rounded-full border whitespace-nowrap ${active ? "text-blue-700 bg-blue-50/80 border-blue-200/60 shadow-xs" : "text-slate-600 border-transparent hover:bg-slate-100/80 hover:text-slate-900"}`
               : `w-full px-4 py-2.5 text-[13px] font-semibold rounded-lg ${active ? "text-blue-700 bg-blue-50/70 font-bold" : "text-slate-600 hover:bg-slate-50 hover:text-blue-600"}`
-          }`}
+            }`}
         >
           {item.label}
           <span className={`material-symbols-outlined transition-transform duration-300 ${level === 1 ? 'text-[15px] ml-1' : 'text-[16px]'} ${active ? 'text-blue-600' : 'text-slate-400 group-hover/item:text-slate-600'} ${isOpen && level === 1 ? 'rotate-180' : ''}`}>
             {level === 1 ? 'expand_more' : 'chevron_right'}
           </span>
         </div>
-        
+
         <AnimatePresence>
           {isOpen && (
             <motion.div
@@ -230,11 +229,10 @@ function DesktopDropdownItem({ item, activeRoute, level = 1 }: { item: NavItem; 
               animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
               exit={{ opacity: 0, x: level === 1 ? 0 : -10, y: level === 1 ? 10 : 0, scale: 0.98 }}
               transition={{ type: "spring", stiffness: 400, damping: 30, mass: 0.8 }}
-              className={`absolute bg-white border border-slate-200 shadow-xl rounded-xl min-w-[240px] z-50 ${
-                level === 1 
+              className={`absolute bg-white border border-slate-200 shadow-xl rounded-xl min-w-[240px] z-50 ${level === 1
                   ? "top-full left-0 mt-1" // Dropdown pertama ke bawah
                   : "top-0 left-full ml-1" // Dropdown kedua dsb ke kanan
-              }`}
+                }`}
             >
               <div className="py-2">
                 {item.subLinks.map((sub, idx) => (
@@ -253,11 +251,10 @@ function DesktopDropdownItem({ item, activeRoute, level = 1 }: { item: NavItem; 
       href={item.href!}
       target={item.isExternal ? "_blank" : undefined}
       rel={item.isExternal ? "noopener noreferrer" : undefined}
-      className={`flex items-center justify-between transition-all duration-300 cursor-pointer ${
-        level === 1 
+      className={`flex items-center justify-between transition-all duration-300 cursor-pointer ${level === 1
           ? `px-2.5 2xl:px-4 py-1.5 text-[12px] 2xl:text-[13px] font-bold rounded-full border whitespace-nowrap ${active ? "text-blue-700 bg-blue-50/80 border-blue-200/60 shadow-xs" : "text-slate-600 border-transparent hover:bg-slate-100/80 hover:text-slate-900"}`
           : `w-full px-4 py-2.5 text-[13px] font-semibold rounded-lg ${active ? "text-blue-700 bg-blue-50/70 font-bold" : "text-slate-600 hover:bg-slate-50 hover:text-blue-600"}`
-      }`}
+        }`}
     >
       {item.label}
       {item.isExternal && item.label !== "Edukasi Iklim" && (
@@ -271,7 +268,7 @@ function DesktopDropdownItem({ item, activeRoute, level = 1 }: { item: NavItem; 
 function MobileAccordionItem({ item, activeRoute, level = 0, closeMenu }: { item: NavItem; activeRoute: string; level?: number; closeMenu: () => void }) {
   const active = isItemActive(item, activeRoute);
   const [isOpen, setIsOpen] = useState(active);
-  
+
   useEffect(() => {
     if (active) setIsOpen(true);
   }, [active]);
@@ -279,19 +276,18 @@ function MobileAccordionItem({ item, activeRoute, level = 0, closeMenu }: { item
   if (item.subLinks) {
     return (
       <div className="flex flex-col border-b border-slate-100 last:border-0">
-        <div 
-          className={`flex items-center justify-between w-full py-2 px-4 text-left transition-colors cursor-pointer ${
-            active ? "bg-slate-50" : "hover:bg-slate-50"
-          }`}
+        <div
+          className={`flex items-center justify-between w-full py-2 px-4 text-left transition-colors cursor-pointer ${active ? "bg-slate-50" : "hover:bg-slate-50"
+            }`}
           style={{ paddingLeft: `${1 + level * 1}rem` }}
           onClick={() => setIsOpen(!isOpen)}
         >
-          <span 
+          <span
             className={`flex-1 py-1 font-bold text-[14px] transition-colors ${active ? "text-primary" : "text-slate-700 hover:text-primary"}`}
           >
             {item.label}
           </span>
-          <button 
+          <button
             className="p-2 ml-2 hover:bg-slate-200 rounded-full transition-colors flex-shrink-0"
           >
             <span className={`material-symbols-outlined text-[20px] transition-transform duration-200 ${isOpen ? 'rotate-180 text-primary' : (active ? 'text-primary' : 'text-slate-400')}`}>
@@ -324,9 +320,8 @@ function MobileAccordionItem({ item, activeRoute, level = 0, closeMenu }: { item
       target={item.isExternal ? "_blank" : undefined}
       rel={item.isExternal ? "noopener noreferrer" : undefined}
       onClick={closeMenu}
-      className={`flex items-center gap-2 py-3 px-4 text-[13px] border-b border-slate-100 last:border-0 transition-colors ${
-        active ? "text-primary font-bold bg-blue-50" : "text-slate-600 hover:text-primary hover:bg-slate-100"
-      }`}
+      className={`flex items-center gap-2 py-3 px-4 text-[13px] border-b border-slate-100 last:border-0 transition-colors ${active ? "text-primary font-bold bg-blue-50" : "text-slate-600 hover:text-primary hover:bg-slate-100"
+        }`}
       style={{ paddingLeft: `${1 + level * 1}rem` }}
     >
       {item.label}
@@ -364,7 +359,7 @@ export function Header({ activeRoute }: { activeRoute?: string }) {
     }
     return link;
   });
-  
+
   // Date/Time States
   const [dateStr, setDateStr] = useState("");
   const [wibTime, setWibTime] = useState({ hh: "--", mm: "--", ss: "--" });
@@ -435,7 +430,7 @@ export function Header({ activeRoute }: { activeRoute?: string }) {
               <Link href="/" className="flex items-center gap-2.5 lg:gap-3 cursor-pointer hover:opacity-90 transition-opacity group relative">
                 {/* Animated Glow Behind Logo */}
                 <div className="absolute -inset-2 bg-gradient-to-r from-blue-400/20 via-sky-300/10 to-amber-300/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
-                
+
                 <div className="relative shrink-0">
                   <Image src="/logobmkg.png" alt="Logo BMKG" width={40} height={50} className="h-9 lg:h-10 2xl:h-11 w-auto shrink-0 drop-shadow-md z-10 relative" />
                   {/* Decorative Climate Ring */}
@@ -462,24 +457,24 @@ export function Header({ activeRoute }: { activeRoute?: string }) {
                 </div>
               </Link>
 
-              {/* WBK & ISO Logos (Compact & Elegant Placement) */}
-              <div className="hidden sm:flex items-center gap-1.5 2xl:gap-2 pl-2 2xl:pl-3 border-l border-slate-200/80 my-auto shrink-0">
+              {/* WBK & ISO Logos (Enlarged & Prominent Placement) */}
+              <div className="hidden sm:flex items-center gap-2 2xl:gap-3 pl-2.5 2xl:pl-3.5 border-l-2 border-slate-200/90 my-auto shrink-0">
                 <div className="relative group/wbk flex items-center" title="Kementerian PANRB - Wilayah Bebas dari Korupsi (WBK) / Zona Integritas">
-                  <Image 
-                    src="/images/logo-wbk.png" 
-                    alt="Logo WBK Zona Integritas" 
-                    width={38} 
-                    height={38} 
-                    className="h-7 lg:h-8 2xl:h-9 w-auto object-contain transition-transform duration-300 group-hover/wbk:scale-105 drop-shadow-xs" 
+                  <Image
+                    src="/images/logo-wbk.png"
+                    alt="Logo WBK Zona Integritas"
+                    width={52}
+                    height={52}
+                    className="h-10 sm:h-11 lg:h-12 2xl:h-[50px] w-auto object-contain transition-transform duration-300 group-hover/wbk:scale-110 drop-shadow-md"
                   />
                 </div>
                 <div className="relative group/iso flex items-center" title="Sertifikasi ISO 9001 Quality Management">
-                  <Image 
-                    src="/images/logo-iso.png" 
-                    alt="Logo ISO 9001 Quality Management" 
-                    width={28} 
-                    height={38} 
-                    className="h-7 lg:h-8 2xl:h-9 w-auto object-contain transition-transform duration-300 group-hover/iso:scale-105 drop-shadow-xs" 
+                  <Image
+                    src="/images/logo-iso.png"
+                    alt="Logo ISO 9001 Quality Management"
+                    width={38}
+                    height={52}
+                    className="h-10 sm:h-11 lg:h-12 2xl:h-[50px] w-auto object-contain transition-transform duration-300 group-hover/iso:scale-110 drop-shadow-md"
                   />
                 </div>
               </div>
@@ -543,7 +538,7 @@ export function Header({ activeRoute }: { activeRoute?: string }) {
                 className="fixed inset-0 bg-black/50 z-[90] md:hidden backdrop-blur-sm"
                 onClick={() => setMobileMenuOpen(false)}
               />
-              
+
               {/* Sidebar */}
               <motion.div
                 initial={{ x: "100%" }}
@@ -575,7 +570,7 @@ export function Header({ activeRoute }: { activeRoute?: string }) {
                     <span className="material-symbols-outlined">close</span>
                   </button>
                 </div>
-                
+
                 {/* Mobile Clock */}
                 <div className="px-5 py-3 border-b border-slate-100 bg-white">
                   <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{dateStr}</div>
@@ -591,15 +586,15 @@ export function Header({ activeRoute }: { activeRoute?: string }) {
                 {/* Mobile Nav Links (Accordions) */}
                 <div className="flex-1 overflow-y-auto py-2">
                   {mappedNavLinks.map((link, idx) => (
-                    <MobileAccordionItem 
-                      key={idx} 
-                      item={link} 
-                      activeRoute={effectiveRoute} 
-                      closeMenu={() => setMobileMenuOpen(false)} 
+                    <MobileAccordionItem
+                      key={idx}
+                      item={link}
+                      activeRoute={effectiveRoute}
+                      closeMenu={() => setMobileMenuOpen(false)}
                     />
                   ))}
                 </div>
-                
+
                 {/* Sidebar Footer */}
                 <div className="p-4 border-t border-border bg-slate-50 flex flex-col gap-2.5">
                   <button

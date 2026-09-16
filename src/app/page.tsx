@@ -344,26 +344,26 @@ export default function Home() {
         {/* ═══════════════════════════════════════════════════ */}
         {/* 1. CUACA TERKINI — Clean Modern Blue Gradient Card */}
         {/* ═══════════════════════════════════════════════════ */}
-        <section id="cuaca-realtime" className="max-w-7xl mx-auto px-6 md:px-8 pt-6 pb-2 w-full scroll-mt-[80px]">
+        <section id="cuaca-realtime" className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-3 lg:pt-4 pb-1 w-full scroll-mt-[80px]">
           <AnimatedContainer animation="fadeInUp" once={true} className="w-full">
-            <div className="bg-gradient-to-r from-[#b2cbf2] via-[#c2d6f6] to-[#e2ebf8] text-slate-900 rounded-3xl p-6 md:p-8 shadow-lg border border-white/80 relative w-full overflow-visible">
+            <div className="bg-gradient-to-r from-[#b2cbf2] via-[#c2d6f6] to-[#e2ebf8] text-slate-900 rounded-3xl p-4 md:p-5 lg:p-6 shadow-md border border-white/80 relative w-full overflow-visible">
               {/* Ambient Glow */}
               <div className="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none">
                 <div className="absolute -right-16 -top-16 w-64 h-64 bg-white/40 rounded-full blur-2xl" />
                 <div className="absolute -left-16 -bottom-16 w-64 h-64 bg-blue-300/40 rounded-full blur-2xl" />
               </div>
 
-              <div className="relative z-10 flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6 xl:gap-8 w-full">
+              <div className="relative z-10 flex flex-col xl:flex-row items-start xl:items-center justify-between gap-4 xl:gap-6 w-full">
                 {/* Left: Main temperature display */}
-                <div className="flex items-center gap-5 shrink-0">
-                  <div className="w-20 h-20 md:w-24 md:h-24 rounded-3xl bg-gradient-to-br from-white/95 via-white/85 to-blue-50/70 backdrop-blur-xl flex items-center justify-center border border-white shadow-md relative overflow-hidden shrink-0 group hover:shadow-xl hover:scale-105 transition-all duration-300">
+                <div className="flex items-center gap-4 shrink-0">
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl bg-gradient-to-br from-white/95 via-white/85 to-blue-50/70 backdrop-blur-xl flex items-center justify-center border border-white shadow-md relative overflow-hidden shrink-0 group hover:shadow-xl hover:scale-105 transition-all duration-300">
                     {/* Inner glowing halo */}
                     <div className="absolute inset-0 bg-gradient-to-tr from-amber-400/25 via-sky-300/20 to-transparent blur-sm rounded-3xl group-hover:scale-125 transition-transform duration-500" />
 
                     {/* Floating weather icon */}
                     <div className="relative z-10 flex items-center justify-center animate-float">
                       <span
-                        className="material-symbols-outlined text-[54px] md:text-[66px] text-amber-500 drop-shadow-[0_8px_16px_rgba(245,158,11,0.5)] group-hover:rotate-6 transition-transform duration-300"
+                        className="material-symbols-outlined text-[44px] md:text-[56px] text-amber-500 drop-shadow-[0_8px_16px_rgba(245,158,11,0.5)] group-hover:rotate-6 transition-transform duration-300"
                         style={{ fontVariationSettings: "'FILL' 1, 'wght' 600" }}
                       >
                         {weather.icon}
@@ -374,20 +374,20 @@ export default function Home() {
                     <div className="absolute -top-10 -left-10 w-20 h-20 bg-white/50 rounded-full blur-md pointer-events-none" />
                   </div>
                   <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="bg-blue-900/10 text-blue-900 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-blue-900/20 whitespace-nowrap">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="bg-blue-900/10 text-blue-900 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-blue-900/20 whitespace-nowrap">
                         CUACA TERKINI
                       </span>
                     </div>
-                    <div className="text-[48px] md:text-[60px] font-black leading-none tracking-tight text-slate-900 whitespace-nowrap">
-                      {latestData ? Math.round(latestData.temp) : "--"}°<span className="text-[28px] md:text-[36px] font-bold text-slate-600">C</span>
+                    <div className="text-[40px] md:text-[52px] font-black leading-none tracking-tight text-slate-900 whitespace-nowrap">
+                      {latestData ? Math.round(latestData.temp) : "--"}°<span className="text-[24px] md:text-[32px] font-bold text-slate-600">C</span>
                     </div>
-                    <p className="text-slate-700 font-bold text-base mt-1 whitespace-nowrap">{weather.text}</p>
+                    <p className="text-slate-700 font-bold text-xs sm:text-sm mt-0.5 whitespace-nowrap">{weather.text}</p>
                   </div>
                 </div>
 
                 {/* Center: Station & Location Info */}
-                <div className="flex flex-col gap-1 xl:border-l xl:border-slate-800/15 xl:pl-8 relative z-20 shrink-0">
+                <div className="flex flex-col gap-1 xl:border-l xl:border-slate-800/15 xl:pl-6 relative z-20 shrink-0">
                   <div className="flex items-center gap-2 text-slate-900 text-sm font-bold whitespace-nowrap">
                     <div className="w-5 flex justify-center shrink-0">
                       <span className="material-symbols-outlined text-[18px] text-blue-700">location_on</span>
@@ -396,7 +396,7 @@ export default function Home() {
                     <div className="relative z-30">
                       <button
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                        className="bg-white/70 hover:bg-white border border-white/90 text-slate-900 font-bold px-3 py-1.5 rounded-xl flex items-center gap-1 cursor-pointer outline-none transition-all shadow-xs text-sm"
+                        className="bg-white/70 hover:bg-white border border-white/90 text-slate-900 font-bold px-3 py-1 rounded-xl flex items-center gap-1 cursor-pointer outline-none transition-all shadow-xs text-xs sm:text-sm"
                       >
                         <span>{stationName}</span>
                         <span className="material-symbols-outlined text-[16px] text-slate-600">{isDropdownOpen ? "expand_less" : "expand_more"}</span>
@@ -455,7 +455,7 @@ export default function Home() {
                 </div>
 
                 {/* Right: Parameter Badges */}
-                <div className="grid grid-cols-2 xl:flex xl:flex-nowrap justify-start xl:justify-end gap-2 md:gap-3 shrink-0 w-full xl:w-auto mt-2 xl:mt-0">
+                <div className="grid grid-cols-2 xl:flex xl:flex-nowrap justify-start xl:justify-end gap-2 shrink-0 w-full xl:w-auto mt-1 xl:mt-0">
                   {[
                     { icon: "water_drop", label: "Kelembaban", value: latestData ? `${Math.round(latestData.rh)}%` : "--", color: "text-blue-700" },
                     { icon: "air", label: "Angin", value: latestData ? `${parseFloat((latestData.ws || 0).toFixed(1))} km/h` : "--", color: "text-teal-700" },
@@ -464,13 +464,13 @@ export default function Home() {
                   ].map((param) => (
                     <div
                       key={param.label}
-                      className="bg-white/75 backdrop-blur-md border border-white/90 rounded-2xl px-3 sm:px-4 py-3 md:py-4 flex flex-col items-start justify-center shadow-xs w-full xl:min-w-[130px]"
+                      className="bg-white/75 backdrop-blur-md border border-white/90 rounded-xl px-3 py-2 md:py-2.5 flex flex-col items-start justify-center shadow-xs w-full xl:min-w-[120px]"
                     >
-                      <div className="flex items-start gap-1 sm:gap-1.5 mb-1.5 w-full">
-                        <span className={`material-symbols-outlined text-[16px] sm:text-[18px] shrink-0 ${param.color}`}>{param.icon}</span>
-                        <span className="text-[0.6rem] sm:text-[0.65rem] md:text-[0.7rem] text-slate-700 font-bold uppercase tracking-wide leading-tight break-words">{param.label}</span>
+                      <div className="flex items-start gap-1 mb-1 w-full">
+                        <span className={`material-symbols-outlined text-[15px] shrink-0 ${param.color}`}>{param.icon}</span>
+                        <span className="text-[0.6rem] sm:text-[0.65rem] text-slate-700 font-bold uppercase tracking-wide leading-tight break-words">{param.label}</span>
                       </div>
-                      <span className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight w-full truncate">{param.value}</span>
+                      <span className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight w-full truncate">{param.value}</span>
                     </div>
                   ))}
                 </div>
@@ -484,67 +484,95 @@ export default function Home() {
         {/* ═══════════════════════════════════════════════════ */}
         {/* 2. HERO WELCOME SECTION */}
         {/* ═══════════════════════════════════════════════════ */}
-        <section className="max-w-7xl mx-auto px-6 md:px-8 py-6 md:py-8 w-full flex flex-col lg:flex-row items-center justify-between gap-10">
-          <div className="w-full lg:flex-1 flex flex-col gap-4">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-2 lg:pt-3 pb-3 lg:pb-5 w-full flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8">
+          <div className="w-full lg:flex-1 flex flex-col gap-2.5 sm:gap-3">
             <div>
-              <span className="inline-block bg-primary/10 text-primary border border-primary/20 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wider whitespace-nowrap">
+              <span className="inline-block bg-primary/10 text-primary border border-primary/20 px-3 py-1 rounded-full text-[11px] sm:text-xs font-extrabold tracking-wider whitespace-nowrap">
                 LAYANAN INFORMASI CUACA & IKLIM
               </span>
             </div>
 
-            <h1 className="text-[2.25rem] sm:text-[2.75rem] md:text-[3.25rem] font-extrabold text-text-primary leading-[1.15] tracking-tight w-full">
+            <h1 className="text-[1.85rem] sm:text-[2.25rem] md:text-[2.65rem] font-extrabold text-text-primary leading-[1.15] tracking-tight w-full">
               Portal Informasi Cuaca &amp; Iklim Jawa Timur
             </h1>
 
             <AnimatedContainer animation="fadeInUp" delay={0.15} once={true} className="w-full">
-              <p className="text-text-secondary text-[1.05rem] md:text-[1.15rem] leading-relaxed w-full">
+              <p className="text-text-secondary text-[0.95rem] md:text-[1.05rem] leading-relaxed w-full max-w-3xl">
                 Layanan digital terpadu Stasiun Klimatologi Jawa Timur. Menyajikan data observasi cuaca realtime, analisis iklim, dan informasi peringatan dini secara akurat untuk seluruh wilayah Jawa Timur.
               </p>
               
-              <div className="mt-6">
-                <div className="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-2.5 flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-[16px] text-primary">auto_awesome</span>
-                  Informasi Khusus:
+              {/* INFORMASI KHUSUS — Eye-Catching Luminous Banner */}
+              <div className="mt-3 lg:mt-4 p-3.5 sm:p-4 md:p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 border border-blue-400/40 shadow-xl shadow-blue-950/25 relative overflow-hidden group">
+                {/* Ambient Background Blur Haloes */}
+                <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-blue-500/20 rounded-full blur-2xl pointer-events-none" />
+                <div className="absolute -left-10 -top-10 w-48 h-48 bg-indigo-500/20 rounded-full blur-2xl pointer-events-none" />
+
+                {/* Header Badge */}
+                <div className="flex items-center justify-between mb-3 relative z-10">
+                  <div className="flex items-center gap-2">
+                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/40 shadow-xs">
+                      <span className="material-symbols-outlined text-[15px] animate-pulse">auto_awesome</span>
+                    </span>
+                    <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-300 to-yellow-100 drop-shadow-xs">
+                      INFORMASI KHUSUS
+                    </span>
+                  </div>
+                  <span className="hidden sm:inline-block text-[10px] font-bold tracking-widest text-blue-200/70 uppercase">
+                    Akses Cepat Layanan Utama
+                  </span>
                 </div>
 
-                <div className="flex flex-row overflow-x-auto snap-x snap-mandatory gap-2.5 sm:gap-3.5 mb-2 pb-2 sm:pb-0 sm:flex-wrap scrollbar-hide -mx-6 px-6 sm:mx-0 sm:px-0">
+                {/* Button Grid / Row */}
+                <div className="flex flex-row overflow-x-auto snap-x snap-mandatory gap-2.5 sm:gap-3.5 pb-1 sm:pb-0 sm:flex-wrap scrollbar-hide -mx-2 px-2 sm:mx-0 sm:px-0 relative z-10">
                   {/* 1. E-Buletin */}
-                  <Link href="/publikasi/e-buletin" className="group shrink-0 snap-start">
-                    <div className="flex items-center gap-2 sm:gap-2.5 text-slate-700 hover:text-indigo-600 transition-colors bg-white/80 hover:bg-white px-3.5 sm:px-4 py-2 rounded-full border border-slate-200/80 shadow-xs hover:shadow-md cursor-pointer whitespace-nowrap">
-                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 shrink-0 group-hover:scale-110 transition-transform">
-                        <span className="material-symbols-outlined text-[16px] sm:text-[18px]">menu_book</span>
+                  <Link href="/publikasi/e-buletin" className="group/card shrink-0 snap-start">
+                    <div className="flex items-center gap-2.5 bg-white/95 hover:bg-white text-slate-900 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl border border-indigo-200/80 shadow-md hover:shadow-indigo-500/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer whitespace-nowrap">
+                      <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0 group-hover/card:scale-110 transition-transform shadow-xs">
+                        <span className="material-symbols-outlined text-[18px]">menu_book</span>
                       </div>
-                      <span className="text-xs sm:text-sm font-bold">E-Buletin</span>
+                      <div className="flex flex-col">
+                        <span className="text-xs sm:text-sm font-extrabold text-slate-900 group-hover/card:text-indigo-700 transition-colors">E-Buletin</span>
+                        <span className="text-[9.5px] font-semibold text-slate-500 -mt-0.5">Publikasi Iklim</span>
+                      </div>
                     </div>
                   </Link>
 
                   {/* 2. Prakiraan Hujan */}
-                  <Link href="/prakiraan-curah-hujan" className="group shrink-0 snap-start">
-                    <div className="flex items-center gap-2 sm:gap-2.5 text-slate-700 hover:text-teal-600 transition-colors bg-white/80 hover:bg-white px-3.5 sm:px-4 py-2 rounded-full border border-slate-200/80 shadow-xs hover:shadow-md cursor-pointer whitespace-nowrap">
-                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-teal-50 flex items-center justify-center text-teal-600 shrink-0 group-hover:scale-110 transition-transform">
-                        <span className="material-symbols-outlined text-[16px] sm:text-[18px]">rainy</span>
+                  <Link href="/prakiraan-curah-hujan" className="group/card shrink-0 snap-start">
+                    <div className="flex items-center gap-2.5 bg-white/95 hover:bg-white text-slate-900 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl border border-teal-200/80 shadow-md hover:shadow-teal-500/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer whitespace-nowrap">
+                      <div className="w-8 h-8 rounded-lg bg-teal-600 text-white flex items-center justify-center shrink-0 group-hover/card:scale-110 transition-transform shadow-xs">
+                        <span className="material-symbols-outlined text-[18px]">rainy</span>
                       </div>
-                      <span className="text-xs sm:text-sm font-bold">Prakiraan Hujan</span>
+                      <div className="flex flex-col">
+                        <span className="text-xs sm:text-sm font-extrabold text-slate-900 group-hover/card:text-teal-700 transition-colors">Prakiraan Hujan</span>
+                        <span className="text-[9.5px] font-semibold text-slate-500 -mt-0.5">Prediksi Bulanan</span>
+                      </div>
                     </div>
                   </Link>
 
                   {/* 3. Hari Tanpa Hujan */}
-                  <Link href="/hari-tanpa-hujan" className="group shrink-0 snap-start">
-                    <div className="flex items-center gap-2 sm:gap-2.5 text-slate-700 hover:text-amber-600 transition-colors bg-white/80 hover:bg-white px-3.5 sm:px-4 py-2 rounded-full border border-slate-200/80 shadow-xs hover:shadow-md cursor-pointer whitespace-nowrap">
-                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 shrink-0 group-hover:scale-110 transition-transform">
-                        <span className="material-symbols-outlined text-[16px] sm:text-[18px]">wb_sunny</span>
+                  <Link href="/hari-tanpa-hujan" className="group/card shrink-0 snap-start">
+                    <div className="flex items-center gap-2.5 bg-white/95 hover:bg-white text-slate-900 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl border border-amber-200/80 shadow-md hover:shadow-amber-500/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer whitespace-nowrap">
+                      <div className="w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center shrink-0 group-hover/card:scale-110 transition-transform shadow-xs">
+                        <span className="material-symbols-outlined text-[18px]">wb_sunny</span>
                       </div>
-                      <span className="text-xs sm:text-sm font-bold">Hari Tanpa Hujan</span>
+                      <div className="flex flex-col">
+                        <span className="text-xs sm:text-sm font-extrabold text-slate-900 group-hover/card:text-amber-700 transition-colors">Hari Tanpa Hujan</span>
+                        <span className="text-[9.5px] font-semibold text-slate-500 -mt-0.5">Analisis HTH</span>
+                      </div>
                     </div>
                   </Link>
 
                   {/* 4. Data Pengamatan */}
-                  <Link href="/data-pengamatan" className="group shrink-0 snap-start">
-                    <div className="flex items-center gap-2 sm:gap-2.5 text-slate-700 hover:text-blue-600 transition-colors bg-white/80 hover:bg-white px-3.5 sm:px-4 py-2 rounded-full border border-slate-200/80 shadow-xs hover:shadow-md cursor-pointer whitespace-nowrap">
-                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0 group-hover:scale-110 transition-transform">
-                        <span className="material-symbols-outlined text-[16px] sm:text-[18px]">analytics</span>
+                  <Link href="/data-pengamatan" className="group/card shrink-0 snap-start">
+                    <div className="flex items-center gap-2.5 bg-white/95 hover:bg-white text-slate-900 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl border border-blue-200/80 shadow-md hover:shadow-blue-500/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer whitespace-nowrap">
+                      <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0 group-hover/card:scale-110 transition-transform shadow-xs">
+                        <span className="material-symbols-outlined text-[18px]">analytics</span>
                       </div>
-                      <span className="text-xs sm:text-sm font-bold">Data Pengamatan</span>
+                      <div className="flex flex-col">
+                        <span className="text-xs sm:text-sm font-extrabold text-slate-900 group-hover/card:text-blue-700 transition-colors">Data Pengamatan</span>
+                        <span className="text-[9.5px] font-semibold text-slate-500 -mt-0.5">Observasi AWS</span>
+                      </div>
                     </div>
                   </Link>
                 </div>
@@ -552,7 +580,7 @@ export default function Home() {
             </AnimatedContainer>
           </div>
 
-          <AnimatedContainer animation="slideInRight" delay={0.3} once={true} className="w-full lg:w-auto flex justify-center lg:justify-end">
+          <AnimatedContainer animation="slideInRight" delay={0.3} once={true} className="w-full lg:w-auto flex justify-center lg:justify-end shrink-0">
             <HeatIndexCard temp={latestData?.temp ?? 0} rh={latestData?.rh ?? 0} />
           </AnimatedContainer>
         </section>
