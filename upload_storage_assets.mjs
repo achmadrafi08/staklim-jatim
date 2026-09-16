@@ -11,8 +11,8 @@ import fs from 'fs';
 import path from 'path';
 
 // Ganti dengan URL dan Service Role Key project Supabase yang baru
-const TARGET_SUPABASE_URL = process.env.SUPABASE_URL || 'https://<PROJECT-ID>.supabase.co';
-const TARGET_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_KEY || 'MASUKKAN_SERVICE_ROLE_KEY_BARU_DISINI';
+const TARGET_SUPABASE_URL = process.env.SUPABASE_URL || 'https://qzcsnkgnygzdrquotdzl.supabase.co';
+const TARGET_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF6Y3Nua2dueWd6ZHJxdW90ZHpsIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4OTAxNTk3NCwiZXhwIjoyMTA0NTkxOTc0fQ.fdcLbFs5kC6D2Dvw1snFmdVvxHQjZ0mbNz20ZEY7xzI';
 
 const baseDir = path.join(process.cwd(), 'storage_assets');
 

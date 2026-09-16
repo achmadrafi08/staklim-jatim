@@ -1,5 +1,5 @@
-export const SUPABASE_URL = "https://jdrqulgbprcfwokhpjqw.supabase.co/rest/v1";
-export const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkcnF1bGdicHJjZndva2hwanF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzMDIyMTcsImV4cCI6MjEwMDg3ODIxN30.mU3G1wfid4SuCVRlfV34RdwFl4YExr4lK-8B8OY3yWg";
+export const SUPABASE_URL = "https://qzcsnkgnygzdrquotdzl.supabase.co/rest/v1";
+export const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF6Y3Nua2dueWd6ZHJxdW90ZHpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMTU5NzQsImV4cCI6MjEwNDU5MTk3NH0.kPFwKQAUf1kUxSKSmm9X3KiDQcKkLu-wM7CMbLKlCnQ";
 
 export const supabaseHeaders = {
   apikey: SUPABASE_ANON_KEY,
@@ -10,11 +10,11 @@ export const supabaseHeaders = {
 
 export async function supabaseFetch(tableName: string, query: string = "") {
   try {
-    // Redirect AWS Realtime Data queries to custom API (althof.site/api.php)
+    // Redirect AWS Realtime Data queries to Hostinger custom API
     if (tableName.startsWith("aws_")) {
       const limitMatch = query.match(/limit=(\d+)/);
       const limit = limitMatch ? limitMatch[1] : "144";
-      const apiUrl = `https://althof.site/api.php?station=${tableName}&limit=${limit}`;
+      const apiUrl = `https://sienna-duck-406851.hostingersite.com/api.php?station=${tableName}&limit=${limit}`;
       
       try {
         const apiRes = await fetch(apiUrl, { cache: "no-store" });
@@ -123,7 +123,7 @@ export async function supabaseDelete(tableName: string, idFilter: string) {
 
 export async function supabaseRpc(functionName: string, params: any = {}) {
   try {
-    const res = await fetch(`https://jdrqulgbprcfwokhpjqw.supabase.co/rest/v1/rpc/${functionName}`, {
+    const res = await fetch(`https://qzcsnkgnygzdrquotdzl.supabase.co/rest/v1/rpc/${functionName}`, {
       method: "POST",
       headers: supabaseHeaders,
       body: JSON.stringify(params),
@@ -165,9 +165,6 @@ export async function supabaseUploadFile(bucket: string, filePath: string, file:
 
     if (!res.ok) {
       let errorText = await res.text();
-      // If it's an RLS error, it might be due to x-upsert triggering an UPDATE that is blocked.
-      // We workaround this by deleting the old file first and re-uploading as a new INSERT.
-      // Note: Supabase sometimes returns HTTP 400 with a JSON containing statusCode: 403 for this.
       if (errorText.includes("row-level security policy")) {
         await supabaseDeleteFile(bucket, filePath);
         res = await doUpload();
@@ -179,7 +176,6 @@ export async function supabaseUploadFile(bucket: string, filePath: string, file:
         throw new Error(errorText);
       }
     }
-    // Return the public URL
     return `${SUPABASE_PROJECT_URL}/storage/v1/object/public/${bucket}/${filePath}`;
   } catch (error) {
     console.error(`Error uploading to bucket ${bucket}:`, error);
@@ -199,7 +195,6 @@ export async function supabaseDeleteFile(bucket: string, filePath: string) {
 
     if (!res.ok) {
       const errorText = await res.text();
-      // Ignore 404 if the file is already deleted
       if (res.status === 404 || errorText.includes("NoSuchKey")) {
         return true; 
       }
