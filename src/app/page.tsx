@@ -40,9 +40,7 @@ const stripHtml = (html?: string) => {
 const getWeatherCondition = (temp: number, rh: number, rr: number) => {
   if (rr > 5) return { text: "Hujan Lebat", icon: "rainy" };
   if (rr > 0) return { text: "Hujan Ringan", icon: "rainy" };
-  if (rh > 85) return { text: "Berawan Tebal", icon: "cloud" };
-  if (rh > 70) return { text: "Cerah Berawan", icon: "partly_cloudy_day" };
-  return { text: "Cerah", icon: "sunny" };
+  return { text: "", icon: "" };
 };
 
 const calculateNOAAHeatIndex = (tempC: number, rh: number): number => {
@@ -120,8 +118,14 @@ const HeatIndexCard = ({ temp, rh, locationName }: { temp: number, rh: number, l
             <span className="text-[1.5rem] font-bold text-slate-500">°C</span>
           </div>
 
-          <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-3 flex-wrap">
-            <span>Sensasi Suhu yang Dirasakan</span>
+          <div className="flex flex-col items-center justify-center gap-1 mb-3">
+            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Sensasi Suhu yang Dirasakan</span>
+            {locationName && (
+              <span className="inline-flex items-center gap-1 text-xs font-extrabold text-blue-700 bg-blue-50/90 px-2.5 py-0.5 rounded-full border border-blue-100/90 shadow-2xs">
+                <span className="material-symbols-outlined text-[14px] text-blue-600">location_on</span>
+                {locationName}
+              </span>
+            )}
           </div>
 
           {/* Sub-metrics Grid (2 Columns: Suhu Udara & Kelembaban) */}
@@ -368,23 +372,6 @@ export default function Home() {
               <div className="relative z-10 flex flex-col xl:flex-row items-start xl:items-center justify-between gap-4 xl:gap-6 w-full">
                 {/* Left: Main temperature display */}
                 <div className="flex items-center gap-4 shrink-0">
-                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl bg-gradient-to-br from-white/95 via-white/85 to-blue-50/70 backdrop-blur-xl flex items-center justify-center border border-white shadow-md relative overflow-hidden shrink-0 group hover:shadow-xl hover:scale-105 transition-all duration-300">
-                    {/* Inner glowing halo */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-amber-400/25 via-sky-300/20 to-transparent blur-sm rounded-3xl group-hover:scale-125 transition-transform duration-500" />
-
-                    {/* Floating weather icon */}
-                    <div className="relative z-10 flex items-center justify-center animate-float">
-                      <span
-                        className="material-symbols-outlined text-[44px] md:text-[56px] text-amber-500 drop-shadow-[0_8px_16px_rgba(245,158,11,0.5)] group-hover:rotate-6 transition-transform duration-300"
-                        style={{ fontVariationSettings: "'FILL' 1, 'wght' 600" }}
-                      >
-                        {weather.icon}
-                      </span>
-                    </div>
-
-                    {/* Glass glare highlight */}
-                    <div className="absolute -top-10 -left-10 w-20 h-20 bg-white/50 rounded-full blur-md pointer-events-none" />
-                  </div>
                   <div>
                     <div className="flex items-center gap-2 mb-0.5">
                       <span className="bg-blue-900/10 text-blue-900 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-blue-900/20 whitespace-nowrap">
@@ -394,7 +381,9 @@ export default function Home() {
                     <div className="text-[40px] md:text-[52px] font-black leading-none tracking-tight text-slate-900 whitespace-nowrap">
                       {latestData ? Math.round(latestData.temp) : "--"}°<span className="text-[24px] md:text-[32px] font-bold text-slate-600">C</span>
                     </div>
-                    <p className="text-slate-700 font-bold text-xs sm:text-sm mt-0.5 whitespace-nowrap">{weather.text}</p>
+                    {weather.text && (
+                      <p className="text-slate-700 font-bold text-xs sm:text-sm mt-0.5 whitespace-nowrap">{weather.text}</p>
+                    )}
                   </div>
                 </div>
 
@@ -500,17 +489,17 @@ export default function Home() {
           <div className="w-full lg:flex-1 flex flex-col gap-2.5 sm:gap-3">
             <div>
               <span className="inline-block bg-primary/10 text-primary border border-primary/20 px-3 py-1 rounded-full text-[11px] sm:text-xs font-extrabold tracking-wider whitespace-nowrap">
-                LAYANAN INFORMASI CUACA & IKLIM
+                LAYANAN INFORMASI IKLIM
               </span>
             </div>
 
             <h1 className="text-[1.85rem] sm:text-[2.25rem] md:text-[2.65rem] font-extrabold text-text-primary leading-[1.15] tracking-tight w-full">
-              Portal Informasi Cuaca &amp; Iklim Jawa Timur
+              Portal Informasi Iklim Jawa Timur
             </h1>
 
             <AnimatedContainer animation="fadeInUp" delay={0.15} once={true} className="w-full">
               <p className="text-text-secondary text-[0.95rem] md:text-[1.05rem] leading-relaxed w-full max-w-3xl">
-                Layanan digital terpadu Stasiun Klimatologi Jawa Timur. Menyajikan data observasi cuaca realtime, analisis iklim, dan informasi peringatan dini secara akurat untuk seluruh wilayah Jawa Timur.
+                Layanan digital terpadu Stasiun Klimatologi Jawa Timur. Menyajikan data observasi dan tren iklim secara berkala, analisis variabilitas iklim, serta informasi dinamika iklim secara akurat untuk seluruh wilayah Jawa Timur.
               </p>
               
               {/* INFORMASI TERBARU — Eye-Catching Luminous Banner */}
@@ -575,15 +564,15 @@ export default function Home() {
                     </div>
                   </Link>
 
-                  {/* 4. Data Pengamatan */}
-                  <Link href="/data-pengamatan" className="group/card shrink-0 snap-start">
+                  {/* 4. Peta Sebaran Pos Hujan ALOPTAMA */}
+                  <Link href="/pelayanan-publik/panduan-layanan/peta-pos" className="group/card shrink-0 snap-start">
                     <div className="flex items-center gap-2.5 bg-white/95 hover:bg-white text-slate-900 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl border border-blue-200/80 shadow-md hover:shadow-blue-500/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer whitespace-nowrap">
                       <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0 group-hover/card:scale-110 transition-transform shadow-xs">
-                        <span className="material-symbols-outlined text-[18px]">analytics</span>
+                        <span className="material-symbols-outlined text-[18px]">map</span>
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-xs sm:text-sm font-extrabold text-slate-900 group-hover/card:text-blue-700 transition-colors">Data Pengamatan</span>
-                        <span className="text-[9.5px] font-semibold text-slate-500 -mt-0.5">Observasi AWS</span>
+                        <span className="text-xs sm:text-sm font-extrabold text-slate-900 group-hover/card:text-blue-700 transition-colors">Peta Pos Hujan</span>
+                        <span className="text-[9.5px] font-semibold text-slate-500 -mt-0.5">Sebaran ALOPTAMA</span>
                       </div>
                     </div>
                   </Link>

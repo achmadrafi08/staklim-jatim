@@ -35,9 +35,10 @@ interface StationCardData {
 const getWeatherCondition = (temp: number, rh: number, rr: number) => {
   if (rr > 5) return { text: "Hujan Lebat", icon: "rainy", color: "text-indigo-600" };
   if (rr > 0) return { text: "Hujan Ringan", icon: "rainy", color: "text-sky-500" };
-  if (rh > 85) return { text: "Berawan Tebal", icon: "cloud", color: "text-slate-500" };
+  if (rh > 85) return { text: "Berawan Tebal", icon: "cloud", color: "text-slate-600" };
   if (rh > 70) return { text: "Cerah Berawan", icon: "partly_cloudy_day", color: "text-amber-500" };
-  return { text: "Cerah", icon: "sunny", color: "text-orange-500" };
+  if (rh > 0) return { text: "Cerah", icon: "wb_sunny", color: "text-orange-500" };
+  return { text: "Aktif", icon: "thermostat", color: "text-emerald-600" };
 };
 
 const getConditionTheme = (condition: string) => {
@@ -49,9 +50,11 @@ const getConditionTheme = (condition: string) => {
     case "Berawan Tebal":
       return { icon: "text-slate-500", accent: "bg-slate-500", text: "text-slate-600", shadow: "hover:shadow-slate-500/20", glow: "from-slate-400/10 to-transparent", ring: "hover:ring-2 hover:ring-slate-400", pill: "bg-slate-100 text-slate-700 border-slate-200" };
     case "Cerah Berawan":
-      return { icon: "text-amber-500", accent: "bg-amber-400", text: "text-amber-600", shadow: "hover:shadow-amber-500/20", glow: "from-amber-400/10 to-transparent", ring: "hover:ring-2 hover:ring-amber-400", pill: "bg-amber-50 text-amber-700 border-amber-100" };
+      return { icon: "text-amber-500", accent: "bg-amber-400", text: "text-amber-600", shadow: "hover:shadow-amber-400/20", glow: "from-amber-400/10 to-transparent", ring: "hover:ring-2 hover:ring-amber-400", pill: "bg-amber-50 text-amber-700 border-amber-100" };
     case "Cerah":
-      return { icon: "text-orange-500", accent: "bg-orange-500", text: "text-orange-600", shadow: "hover:shadow-orange-500/20", glow: "from-orange-400/10 to-transparent", ring: "hover:ring-2 hover:ring-orange-500", pill: "bg-orange-50 text-orange-700 border-orange-100" };
+      return { icon: "text-orange-500", accent: "bg-orange-500", text: "text-orange-600", shadow: "hover:shadow-orange-500/20", glow: "from-orange-400/10 to-transparent", ring: "hover:ring-2 hover:ring-orange-400", pill: "bg-orange-50 text-orange-700 border-orange-100" };
+    case "Aktif":
+      return { icon: "text-emerald-500", accent: "bg-emerald-500", text: "text-emerald-600", shadow: "hover:shadow-emerald-500/20", glow: "from-emerald-400/10 to-transparent", ring: "hover:ring-2 hover:ring-emerald-400", pill: "bg-emerald-50 text-emerald-700 border-emerald-100" };
     case "Offline":
     default:
       return { icon: "text-slate-300", accent: "bg-slate-300", text: "text-slate-400", shadow: "hover:shadow-slate-300/20", glow: "from-slate-200/10 to-transparent", ring: "hover:ring-2 hover:ring-slate-300", pill: "bg-slate-50 text-slate-500 border-slate-200" };
@@ -277,24 +280,15 @@ export function StationSlider({ onStationSelect }: StationSliderProps = {}) {
             <span className="text-[9px] sm:text-[10px] font-semibold tracking-wide">{card.time}</span>
           </div>
 
-          {/* Weather Icon */}
-          <div className="relative my-1 sm:my-2 group-hover:scale-105 transition-transform duration-500">
-            <span
-              className={`material-symbols-outlined text-[40px] sm:text-[52px] ${theme.icon} drop-shadow-sm`}
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
-              {card.icon}
-            </span>
-          </div>
-
           {/* Temperature */}
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center my-1 sm:my-2">
             <div className="flex items-start">
               <span className="text-[2.2rem] sm:text-[2.8rem] font-black text-slate-800 tracking-tighter leading-none tabular-nums">
                 {card.temp !== 0 ? card.temp : "--"}
               </span>
               <span className="text-sm sm:text-lg font-bold text-slate-300 ml-0.5 mt-0.5 sm:mt-1">°C</span>
             </div>
+
             {/* Minimum Temperature Indicator */}
             {card.min_temp !== undefined && (
               <div className="flex items-center gap-1 mt-0.5 sm:mt-1 bg-white px-1.5 sm:px-2 py-0.5 rounded-full border border-slate-100 shadow-sm shadow-slate-200/20 group-hover:border-blue-100 group-hover:shadow-blue-100/50 transition-all">
@@ -314,8 +308,9 @@ export function StationSlider({ onStationSelect }: StationSliderProps = {}) {
 
           {/* Condition + Humidity Pills in Fixed Grid for Consistency */}
           <div className="grid grid-cols-2 gap-1 sm:gap-1.5 w-full mt-0.5">
-            <div className={`flex items-center justify-center px-1 sm:px-1.5 py-1 rounded-md sm:rounded-lg border text-[8.5px] sm:text-[9.5px] font-bold text-center leading-[1.1] min-h-[26px] sm:min-h-[30px] ${theme.pill}`}>
-              <span className="text-center w-full">{card.condition}</span>
+            <div className={`flex items-center justify-center gap-1 px-1 sm:px-1.5 py-1 rounded-md sm:rounded-lg border text-[8.5px] sm:text-[9.5px] font-bold text-center leading-[1.1] min-h-[26px] sm:min-h-[30px] ${theme.pill}`}>
+              <span className="material-symbols-outlined text-[12px] sm:text-[13px] shrink-0">{card.icon}</span>
+              <span className="truncate">{card.condition}</span>
             </div>
             <div className="flex items-center justify-center gap-0.5 sm:gap-1 px-1 sm:px-1.5 py-1 rounded-md sm:rounded-lg border bg-blue-50 text-blue-700 border-blue-100 text-[8.5px] sm:text-[10px] font-bold min-h-[26px] sm:min-h-[30px]">
               <span className="material-symbols-outlined text-[10px] sm:text-[11px]">water_drop</span>
@@ -389,7 +384,7 @@ export function StationSlider({ onStationSelect }: StationSliderProps = {}) {
               </div>
               
               {/* Tooltip Content */}
-              <div className="absolute left-0 sm:left-auto sm:right-0 top-full mt-3 w-[240px] p-4 bg-white/95 backdrop-blur-md text-slate-700 text-[11px] rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border border-slate-100 opacity-0 invisible group-hover/info:opacity-100 group-hover/info:visible transition-all duration-300 z-50 translate-y-2 group-hover/info:translate-y-0 text-left pointer-events-none">
+              <div className="absolute left-0 sm:left-auto sm:right-0 top-full mt-3 w-[260px] p-4 bg-white/95 backdrop-blur-md text-slate-700 text-[11px] rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border border-slate-100 opacity-0 invisible group-hover/info:opacity-100 group-hover/info:visible transition-all duration-300 z-50 translate-y-2 group-hover/info:translate-y-0 text-left pointer-events-none">
                 <div className="font-bold text-xs mb-2 text-slate-800 border-b border-slate-100 pb-2 flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[16px] text-blue-500">info</span>
                   Indikator Cuaca Stasiun
@@ -401,8 +396,9 @@ export function StationSlider({ onStationSelect }: StationSliderProps = {}) {
                   <li className="flex justify-between items-center"><span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400"></span><span className="text-amber-500">Cerah Berawan</span></span> <span className="font-mono text-slate-400">RH &gt; 70%</span></li>
                   <li className="flex justify-between items-center"><span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-orange-500"></span><span className="text-orange-500">Cerah</span></span> <span className="font-mono text-slate-400">RH &le; 70%</span></li>
                 </ul>
-                <div className="mt-3 pt-2.5 border-t border-slate-100 text-[10px] text-slate-400 leading-relaxed font-normal">
-                  Kalkulasi otomatis dari sensor Curah Hujan (CH) dan Kelembaban Udara (RH) instrumen AWS.
+                <div className="mt-3 pt-2.5 border-t border-slate-100 text-[10px] text-slate-500 leading-relaxed font-normal flex flex-col gap-1">
+                  <div><strong>Sumber Data:</strong> Sensor Automatic Weather Station (AWS) BMKG.</div>
+                  <div><strong>Metode Parameter:</strong> Klasifikasi visual cuaca dikalkulasi secara real-time berdasarkan kombinasi Kelembapan Udara (RH) dan Intensitas Curah Hujan (CH) stasiun.</div>
                 </div>
               </div>
             </div>

@@ -35,7 +35,6 @@ export const navLinks: NavItem[] = [
               { href: "/iklim/prediksi-iklim/prediksi-musim/awal", label: "Prediksi Awal Musim" },
               { href: "/iklim/prediksi-iklim/prediksi-musim/perbandingan", label: "Prediksi Perbandingan Musim" },
               { href: "/iklim/prediksi-iklim/prediksi-musim/sifat", label: "Prediksi Sifat Musim" },
-              { href: "/iklim/prediksi-iklim/prediksi-musim/durasi", label: "Prediksi Durasi Musim" },
               { href: "/iklim/prediksi-iklim/prediksi-musim/puncak", label: "Prediksi Puncak Musim" },
               { href: "/iklim/prediksi-iklim/prediksi-musim/curah-hujan", label: "Prediksi Curah Hujan Musim" },
             ]
@@ -204,23 +203,27 @@ function DesktopDropdownItem({ item, activeRoute, level = 1 }: { item: NavItem; 
   const active = isItemActive(item, activeRoute);
 
   if (item.subLinks) {
+    const Component = item.href ? Link : ("div" as any);
+    const componentProps = item.href ? { href: item.href, onClick: () => setIsOpen(false) } : {};
+
     return (
       <div
         className="relative group/item"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <div
-          className={`flex items-center justify-between transition-all duration-300 cursor-default ${level === 1
+        <Component
+          {...componentProps}
+          className={`flex items-center justify-between transition-all duration-300 cursor-pointer ${level === 1
               ? `px-2.5 2xl:px-4 py-1.5 text-[12px] 2xl:text-[13px] font-bold rounded-full border whitespace-nowrap ${active ? "text-blue-700 bg-blue-50/80 border-blue-200/60 shadow-xs" : "text-slate-600 border-transparent hover:bg-slate-100/80 hover:text-slate-900"}`
               : `w-full px-4 py-2.5 text-[13px] font-semibold rounded-lg ${active ? "text-blue-700 bg-blue-50/70 font-bold" : "text-slate-600 hover:bg-slate-50 hover:text-blue-600"}`
             }`}
         >
-          {item.label}
+          <span className="flex-1">{item.label}</span>
           <span className={`material-symbols-outlined transition-transform duration-300 ${level === 1 ? 'text-[15px] ml-1' : 'text-[16px]'} ${active ? 'text-blue-600' : 'text-slate-400 group-hover/item:text-slate-600'} ${isOpen && level === 1 ? 'rotate-180' : ''}`}>
             {level === 1 ? 'expand_more' : 'chevron_right'}
           </span>
-        </div>
+        </Component>
 
         <AnimatePresence>
           {isOpen && (
@@ -277,18 +280,29 @@ function MobileAccordionItem({ item, activeRoute, level = 0, closeMenu }: { item
     return (
       <div className="flex flex-col border-b border-slate-100 last:border-0">
         <div
-          className={`flex items-center justify-between w-full py-2 px-4 text-left transition-colors cursor-pointer ${active ? "bg-slate-50" : "hover:bg-slate-50"
+          className={`flex items-center justify-between w-full py-2 px-4 text-left transition-colors ${active ? "bg-slate-50" : "hover:bg-slate-50"
             }`}
           style={{ paddingLeft: `${1 + level * 1}rem` }}
-          onClick={() => setIsOpen(!isOpen)}
         >
-          <span
-            className={`flex-1 py-1 font-bold text-[14px] transition-colors ${active ? "text-primary" : "text-slate-700 hover:text-primary"}`}
-          >
-            {item.label}
-          </span>
+          {item.href ? (
+            <Link
+              href={item.href}
+              onClick={closeMenu}
+              className={`flex-1 py-1 font-bold text-[14px] transition-colors cursor-pointer ${active ? "text-primary" : "text-slate-700 hover:text-primary"}`}
+            >
+              {item.label}
+            </Link>
+          ) : (
+            <span
+              className={`flex-1 py-1 font-bold text-[14px] transition-colors cursor-pointer ${active ? "text-primary" : "text-slate-700 hover:text-primary"}`}
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {item.label}
+            </span>
+          )}
           <button
             className="p-2 ml-2 hover:bg-slate-200 rounded-full transition-colors flex-shrink-0"
+            onClick={() => setIsOpen(!isOpen)}
           >
             <span className={`material-symbols-outlined text-[20px] transition-transform duration-200 ${isOpen ? 'rotate-180 text-primary' : (active ? 'text-primary' : 'text-slate-400')}`}>
               expand_more
