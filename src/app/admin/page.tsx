@@ -17,6 +17,7 @@ import { SdmTab } from "@/components/admin/tabs/SdmTab";
 import { ClimateTab } from "@/components/admin/tabs/ClimateTab";
 import { ObservationTab } from "@/components/admin/tabs/ObservationTab";
 import { RainfallTab } from "@/components/admin/tabs/RainfallTab";
+import { SeasonTab } from "@/components/admin/tabs/SeasonTab";
 import { TempMapsTab } from "@/components/admin/tabs/TempMapsTab";
 import { HthTab } from "@/components/admin/tabs/HthTab";
 import { IklimPublikasiTab } from "@/components/admin/tabs/IklimPublikasiTab";
@@ -107,6 +108,7 @@ function AdminDashboardContent() {
       case 'climate': return <ClimateTab />;
       case 'observations': return <ObservationTab />;
       case 'rainfall': return <RainfallTab />;
+      case 'season': return <SeasonTab />;
       case 'tempmaps': return <TempMapsTab />;
       case 'hth': return <HthTab />;
       case 'iklim_publikasi': return <IklimPublikasiTab />;
@@ -292,6 +294,7 @@ function AdminDashboardContent() {
                 { id: 'observations', icon: 'fact_check', label: 'Data Pengamatan' },
                 { id: 'climate', icon: 'thermostat', label: 'Perubahan Iklim' },
                 { id: 'rainfall', icon: 'rainy', label: 'Prakiraan Hujan' },
+                { id: 'season', icon: 'calendar_today', label: 'Prediksi Awal Musim' },
                 { id: 'tempmaps', icon: 'map', label: 'Peta Curah Hujan' },
                 { id: 'hth', icon: 'wb_sunny', label: 'Hari Tanpa Hujan' },
                 { id: 'iklim_publikasi', icon: 'menu_book', label: 'Publikasi Iklim' },
@@ -371,6 +374,7 @@ function AdminDashboardContent() {
                 { activeTab === 'org' && 'Struktur Organisasi' }
                 { activeTab === 'tempmaps' && 'Peta Perubahan Suhu' }
                 { activeTab === 'rainfall' && 'Prakiraan Curah Hujan' }
+                { activeTab === 'season' && 'Prediksi Awal Musim' }
                 { activeTab === 'hth' && 'Update Data HTH' }
                 { activeTab === 'iklim_publikasi' && 'Publikasi & Prediksi Iklim' }
                 { activeTab === 'pelayanan' && 'Kelola Konten Pelayanan Publik' }

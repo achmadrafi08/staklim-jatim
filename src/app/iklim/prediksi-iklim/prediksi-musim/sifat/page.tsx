@@ -5,14 +5,14 @@ import { ClimatePublicationViewer } from "@/components/climate/ClimatePublicatio
 export default function SifatMusimPage() {
   return (
     <>
-    <Header activeRoute="/iklim/prediksi-iklim/prediksi-musim/sifat" />
+      <Header activeRoute="/iklim/prediksi-iklim/prediksi-musim/sifat" />
       <main className="min-h-screen bg-slate-50 pt-24 pb-12 w-full">
-      <ClimatePublicationViewer 
-        tableName="iklim_sifat_musim" 
-        title="Prediksi Sifat Musim" 
-        description="Prakiraan sifat musim yang akan terjadi, apakah normal, atas normal, atau bawah normal."
-      />
-    </main>
+        <ClimatePublicationViewer 
+          tableName="iklim_sifat_musim" 
+          title="Prediksi Sifat Musim" 
+          description="Prakiraan sifat musim yang akan terjadi, apakah normal, atas normal, atau bawah normal."
+        />
+      </main>
       <Footer />
     </>
   );

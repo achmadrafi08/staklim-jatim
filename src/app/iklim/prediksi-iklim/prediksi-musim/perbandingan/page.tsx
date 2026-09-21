@@ -5,14 +5,14 @@ import { ClimatePublicationViewer } from "@/components/climate/ClimatePublicatio
 export default function PerbandinganMusimPage() {
   return (
     <>
-    <Header activeRoute="/iklim/prediksi-iklim/prediksi-musim/perbandingan" />
+      <Header activeRoute="/iklim/prediksi-iklim/prediksi-musim/perbandingan" />
       <main className="min-h-screen bg-slate-50 pt-24 pb-12 w-full">
-      <ClimatePublicationViewer 
-        tableName="iklim_perbandingan_musim" 
-        title="Prediksi Perbandingan Musim" 
-        description="Perbandingan prediksi musim saat ini terhadap rata-rata klimatologisnya."
-      />
-    </main>
+        <ClimatePublicationViewer 
+          tableName="iklim_perbandingan_musim" 
+          title="Prediksi Perbandingan Musim" 
+          description="Perbandingan prediksi musim saat ini terhadap rata-rata klimatologisnya."
+        />
+      </main>
       <Footer />
     </>
   );

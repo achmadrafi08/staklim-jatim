@@ -459,6 +459,29 @@ export function RainfallMap({ forecast }: RainfallMapProps) {
     }
   }, [kabupatenData, geoData]);
 
+  const legendItems = useMemo(() => {
+    if (!geoData || !geoData.features || geoData.features.length === 0) return null;
+
+    const itemsMap = new Map<string, { label: string; color: string }>();
+
+    for (const f of geoData.features) {
+      const p = f.properties || {};
+      const label = p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.info || p.INFO || p.ket || p.KET || p.range;
+      const color = p.fill_color || p.FILL_COLOR || p.color || p.COLOR;
+
+      if (label && typeof label === 'string' && label.trim() !== '') {
+        const cleanLabel = label.trim();
+        if (!itemsMap.has(cleanLabel)) {
+          const itemColor = color || (typeof getFeatureValue(f) === 'number' ? getColor(getFeatureValue(f)) : '#3b82f6');
+          itemsMap.set(cleanLabel, { label: cleanLabel, color: itemColor });
+        }
+      }
+    }
+
+    if (itemsMap.size === 0) return null;
+    return Array.from(itemsMap.values());
+  }, [geoData]);
+
 
   const style = (feature: any) => {
     const value = getFeatureValue(feature);
