@@ -84,7 +84,7 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col">
         <div id="global-splash-screen" suppressHydrationWarning className="fixed inset-0 z-[99999] bg-slate-50 flex flex-col items-center justify-center transition-opacity duration-500">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-          <p className="text-slate-500 font-medium animate-pulse">Memuat aplikasi...</p>
+          <p className="text-slate-500 font-medium animate-pulse">Mohon tunggu sebentar...</p>
         </div>
         <ConfirmProvider>
           <ToastProvider>
