@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState, useRef, useMemo } from "react";
-import { MapContainer, TileLayer, GeoJSON, useMap, ZoomControl } from "react-leaflet";
+import { MapContainer, TileLayer, GeoJSON, useMap, ZoomControl, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import { Search } from "lucide-react";
 import * as turf from "@turf/turf";
 import "leaflet/dist/leaflet.css";
+import { getBMKGSeasonColor } from "@/lib/seasonColors";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -26,36 +27,6 @@ interface ForecastOption {
 interface SeasonMapProps {
   forecast: ForecastOption | null;
 }
-
-// Skala warna khas BMKG untuk Zona Musim / Awal Musim
-const getSeasonColor = (val: string | number | undefined) => {
-  if (!val) return "#94a3b8";
-  const s = String(val).toLowerCase();
-
-  if (s.includes("mar iii")) return "#d97706"; // Orange
-  if (s.includes("apr i")) return "#b45309";  // Darker Gold
-  if (s.includes("apr ii")) return "#ca8a04"; // Gold
-  if (s.includes("apr iii")) return "#eab308"; // Yellow
-  if (s.includes("mei i")) return "#a3e635";  // Lime
-  if (s.includes("mei ii")) return "#84cc16"; // Yellow Green
-  if (s.includes("jun i")) return "#22c55e";  // Green
-
-  if (s.includes("sep i")) return "#06b6d4";  // Cyan
-  if (s.includes("sep iii")) return "#10b981"; // Emerald
-  if (s.includes("okt i")) return "#15803d";  // Dark Green
-  if (s.includes("okt ii")) return "#65a30d"; // Olive Green
-  if (s.includes("okt iii")) return "#84cc16"; // Lime
-  if (s.includes("nov i")) return "#eab308";  // Yellow
-  if (s.includes("nov ii")) return "#d97706"; // Amber
-  if (s.includes("nov iii")) return "#b45309"; // Dark Amber
-  if (s.includes("des i")) return "#f97316";   // Orange
-
-  const colors = ["#d97706", "#b45309", "#ca8a04", "#eab308", "#a3e635", "#84cc16", "#22c55e"];
-  const num = parseInt(s.replace(/\D/g, ""), 10);
-  if (!isNaN(num)) return colors[num % colors.length];
-
-  return "#3b82f6";
-};
 
 function MapController({ bounds }: { bounds: L.LatLngBoundsExpression | null }) {
   const map = useMap();
@@ -80,6 +51,10 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFeature, setSelectedFeature] = useState<any>(null);
   const [mapBounds, setMapBounds] = useState<L.LatLngBoundsExpression | null>(null);
+
+  // User location state
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [isLocating, setIsLocating] = useState(false);
 
   // Load GeoJSON data utama saat forecast berubah
   useEffect(() => {
@@ -131,6 +106,48 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
       });
   }, []);
 
+  // Handle Geolocation (Lokasi Saya Saat Ini)
+  const handleGetLocation = () => {
+    if (typeof window === "undefined" || !navigator.geolocation) {
+      alert("Fitur lokasi tidak didukung oleh browser Anda.");
+      return;
+    }
+
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        setUserLocation({ lat, lng });
+        setIsLocating(false);
+
+        // Center map to user position
+        const latLng: L.LatLngExpression = [lat, lng];
+        setMapBounds(L.latLngBounds([latLng, latLng]));
+
+        // Check point in polygon against geoData features to auto-select ZOM
+        if (geoData?.features) {
+          const pt = turf.point([lng, lat]);
+          const found = geoData.features.find((f: any) => {
+            try {
+              return turf.booleanPointInPolygon(pt, f);
+            } catch {
+              return false;
+            }
+          });
+          if (found) {
+            setSelectedFeature(found);
+          }
+        }
+      },
+      (err) => {
+        setIsLocating(false);
+        alert("Gagal mendapatkan lokasi saat ini. Pastikan izin lokasi diizinkan di peramban Anda.");
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  };
+
   // Extract unique Dasarian legend items from GeoJSON properties if available
   const legendItems = useMemo(() => {
     if (!geoData || !geoData.features || geoData.features.length === 0) return null;
@@ -139,13 +156,13 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
 
     for (const f of geoData.features) {
       const p = f.properties || {};
-      const label = p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.info || p.INFO || p.ket || p.KET;
+      const label = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.info || p.INFO || p.ket || p.KET;
       const color = p.fill_color || p.FILL_COLOR || p.color || p.COLOR;
 
       if (label && typeof label === 'string' && label.trim() !== '') {
         const cleanLabel = label.trim();
         if (!itemsMap.has(cleanLabel)) {
-          const itemColor = color || getSeasonColor(cleanLabel);
+          const itemColor = color || getBMKGSeasonColor(cleanLabel, forecast?.category);
           itemsMap.set(cleanLabel, { label: cleanLabel, color: itemColor });
         }
       }
@@ -153,7 +170,7 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
 
     if (itemsMap.size === 0) return null;
     return Array.from(itemsMap.values());
-  }, [geoData]);
+  }, [geoData, forecast]);
 
   // Filter fitur berdasarkan kata kunci pencarian
   const searchResults = useMemo(() => {
@@ -163,9 +180,9 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
 
     return targetSource.filter((f: any) => {
       const p = f.properties || {};
-      const zom = String(p.ZOM || p.zom || p.kode_zom || "").toLowerCase();
+      const zom = String(p.NO_ZOM_NAS || p.no_zom_nas || p.ZOM || p.zom || p.kode_zom || "").toLowerCase();
       const nama = String(p.NAMA_ZOM || p.nama_zom || p.nama || p.WADMKK || p.KABUPATEN || "").toLowerCase();
-      const awal = String(p.AWAL_MUSIM || p.awal_musim || p.periode || "").toLowerCase();
+      const awal = String(p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.periode || "").toLowerCase();
       return zom.includes(q) || nama.includes(q) || awal.includes(q);
     }).slice(0, 8);
   }, [searchQuery, geoData, kabBoundary]);
@@ -182,9 +199,9 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
 
   const styleGeoJSON = (feature: any) => {
     const p = feature?.properties || {};
-    const val = p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.PERIODE || p.periode || p.ZOM;
+    const val = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.PERIODE || p.periode || p.ZOM;
     const customColor = p.fill_color || p.FILL_COLOR || p.color || p.COLOR;
-    const color = customColor || getSeasonColor(val);
+    const color = customColor || getBMKGSeasonColor(val, forecast?.category);
 
     return {
       fillColor: color,
@@ -197,9 +214,9 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
 
   const onEachFeature = (feature: any, layer: L.Layer) => {
     const p = feature.properties || {};
-    const zomCode = p.ZOM || p.zom || p.KODE_ZOM || p.id || "-";
+    const zomCode = p.NO_ZOM_NAS || p.no_zom_nas || p.ZOM || p.zom || p.KODE_ZOM || p.id || "-";
     const zomNama = p.NAMA_ZOM || p.nama_zom || p.WADMKK || p.KABUPATEN || "Wilayah ZOM";
-    const awalMusim = p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.PERIODE || p.periode || "Belum ditentukan";
+    const awalMusim = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.PERIODE || p.periode || "Belum ditentukan";
     const sifat = p.SIFAT || p.sifat || p.SIFAT_MUSIM || "-";
 
     const popupContent = `
@@ -246,6 +263,35 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 w-full">
+      <style dangerouslySetInnerHTML={{__html: `
+        .kabupaten-label {
+          background: transparent;
+          border: none;
+          box-shadow: none;
+          color: #1f2937;
+          font-weight: 800;
+          font-size: 11px;
+          text-shadow: 1px 1px 2px white, -1px -1px 2px white, 1px -1px 2px white, -1px 1px 2px white;
+          text-align: center;
+          pointer-events: none;
+        }
+        .custom-bmkg-popup .leaflet-popup-content-wrapper {
+          padding: 0;
+          border-radius: 8px;
+          overflow: hidden;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        .custom-bmkg-popup .leaflet-popup-content {
+          margin: 0;
+          width: 250px !important;
+        }
+        .custom-bmkg-popup .leaflet-popup-close-button {
+          color: white !important;
+          padding: 8px 8px 0 0 !important;
+          font-weight: bold;
+        }
+      `}} />
+
       {/* Area Peta */}
       <div className="flex-1 relative bg-slate-900 rounded-2xl overflow-hidden shadow-xl border border-slate-200 h-[560px] lg:h-[640px]">
         {loading && (
@@ -263,7 +309,7 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Cari kecamatan atau kabupaten..."
+              placeholder="Cari ZOM, kecamatan, atau kabupaten..."
               className="w-full bg-transparent text-xs sm:text-sm text-slate-800 outline-none font-medium"
             />
             {searchQuery && (
@@ -281,8 +327,11 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
             <div className="mt-2 bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden max-h-60 overflow-y-auto">
               {searchResults.map((f: any, idx: number) => {
                 const p = f.properties || {};
-                const label = p.ZOM || p.NAMA_ZOM || p.WADMKK || p.KABUPATEN || "Wilayah";
-                const sub = p.AWAL_MUSIM || p.awal_musim || p.AM || "";
+                const zomNum = p.NO_ZOM_NAS || p.no_zom_nas || p.ZOM || p.zom;
+                const label = zomNum
+                  ? `ZOM ${zomNum} - ${p.NAMA_ZOM || p.nama_zom || p.WADMKK || p.KABUPATEN || "Wilayah"}`
+                  : (p.NAMA_ZOM || p.nama_zom || p.WADMKK || p.KABUPATEN || "Wilayah");
+                const sub = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.AM || "";
 
                 return (
                   <button
@@ -291,7 +340,7 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
                     className="w-full px-4 py-2.5 text-left hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 flex flex-col gap-0.5"
                   >
                     <span className="text-xs font-bold text-slate-800">{label}</span>
-                    {sub && <span className="text-[11px] text-primary font-semibold">{sub}</span>}
+                    {sub && <span className="text-[11px] text-primary font-semibold">Awal Musim: {sub}</span>}
                   </button>
                 );
               })}
@@ -357,6 +406,59 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
               onEachFeature={onEachFeature}
             />
           )}
+
+          {/* Marker Lokasi Pengguna */}
+          {userLocation && (
+            <Marker
+              position={[userLocation.lat, userLocation.lng]}
+              icon={L.divIcon({
+                className: "custom-user-location-marker",
+                html: `<div class="w-5 h-5 bg-blue-600 border-2 border-white rounded-full shadow-lg animate-ping"></div><div class="w-5 h-5 bg-blue-600 border-2 border-white rounded-full shadow-lg absolute inset-0"></div>`,
+                iconSize: [20, 20],
+                iconAnchor: [10, 10],
+              })}
+            >
+              <Popup className="custom-bmkg-popup">
+                <div style={{ minWidth: "220px", padding: 0, fontFamily: "sans-serif" }}>
+                  <div style={{ backgroundColor: "#0d6efd", color: "white", padding: "10px 15px", fontWeight: "bold", textAlign: "center", fontSize: "14px" }}>
+                    DETAIL INFO
+                  </div>
+                  <div style={{ padding: "15px", background: "white" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px dashed #e2e8f0", paddingBottom: "8px", marginBottom: "10px", fontSize: "13px" }}>
+                      <span style={{ color: "#475569" }}>Wilayah:</span>
+                      <span style={{ color: "#0d6efd", fontWeight: "bold" }}>
+                        {selectedFeature?.properties ? (selectedFeature.properties?.NAMA_ZOM || selectedFeature.properties?.nama_zom || selectedFeature.properties?.KABUPATEN || "Wilayah Anda") : "Lokasi Anda"}
+                      </span>
+                    </div>
+                    {selectedFeature?.properties && (
+                      <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px dashed #e2e8f0", paddingBottom: "8px", marginBottom: "10px", fontSize: "12px" }}>
+                        <span style={{ color: "#475569" }}>Kode ZOM:</span>
+                        <span style={{ color: "#1e293b", fontWeight: "600" }}>
+                          ZOM {selectedFeature.properties?.NO_ZOM_NAS || selectedFeature.properties?.no_zom_nas || selectedFeature.properties?.ZOM || "-"}
+                        </span>
+                      </div>
+                    )}
+                    <div style={{ textAlign: "center", marginTop: "10px" }}>
+                      <span style={{ color: "#64748b", fontSize: "11px", display: "block", marginBottom: "6px" }}>Prediksi Awal Musim</span>
+                      <div style={{
+                        backgroundColor: selectedFeature?.properties ? (selectedFeature.properties.fill_color || getBMKGSeasonColor(selectedFeature.properties.PMK || selectedFeature.properties.AWAL_MUSIM, forecast?.category)) : "#0d6efd",
+                        color: "white",
+                        textShadow: "0 1px 2px rgba(0,0,0,0.4)",
+                        padding: "6px 12px",
+                        borderRadius: "8px",
+                        fontWeight: "bold",
+                        display: "inline-block",
+                        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                        fontSize: "13px"
+                      }}>
+                        {selectedFeature?.properties ? (selectedFeature.properties.PMK || selectedFeature.properties.pmk || selectedFeature.properties.PMH || selectedFeature.properties.AWAL_MUSIM || "Terdeteksi") : "Lokasi Ditemukan"}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Popup>
+            </Marker>
+          )}
         </MapContainer>
       </div>
 
@@ -398,6 +500,21 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
               />
             </label>
           </div>
+
+          <hr className="my-1 border-slate-100" />
+
+          {/* Tombol Lokasi Saya Saat Ini di Bawah Kontrol Layer */}
+          <button
+            type="button"
+            onClick={handleGetLocation}
+            disabled={isLocating}
+            className="w-full py-3 bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white rounded-xl flex items-center justify-center gap-2 text-xs font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed group cursor-pointer shadow-sm"
+          >
+            <span className={`material-symbols-outlined text-[20px] ${isLocating ? "animate-spin" : ""}`}>
+              {isLocating ? "progress_activity" : "my_location"}
+            </span>
+            <span>{isLocating ? "Mencari Lokasi..." : "Lokasi Saya Saat Ini"}</span>
+          </button>
         </div>
 
         {/* Panel Informasi ZOM Terpilih */}
@@ -414,7 +531,7 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
             </div>
             <div className="pt-1 space-y-1">
               <h5 className="font-black text-slate-900 text-base">
-                ZOM {selectedFeature.properties?.ZOM || selectedFeature.properties?.zom || "-"}
+                ZOM {selectedFeature.properties?.NO_ZOM_NAS || selectedFeature.properties?.no_zom_nas || selectedFeature.properties?.ZOM || selectedFeature.properties?.zom || "-"}
               </h5>
               <p className="text-xs text-slate-600 font-semibold">
                 {selectedFeature.properties?.NAMA_ZOM || selectedFeature.properties?.nama_zom || selectedFeature.properties?.WADMKK || selectedFeature.properties?.KABUPATEN || "-"}
@@ -422,7 +539,7 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
               <div className="mt-3 pt-2 border-t border-blue-200/50 space-y-1 text-xs">
                 <div className="flex justify-between">
                   <span className="text-slate-500">Awal Musim:</span>
-                  <span className="font-bold text-blue-700">{selectedFeature.properties?.AWAL_MUSIM || selectedFeature.properties?.awal_musim || selectedFeature.properties?.AM || "-"}</span>
+                  <span className="font-bold text-blue-700">{selectedFeature.properties?.PMK || selectedFeature.properties?.pmk || selectedFeature.properties?.PMH || selectedFeature.properties?.pmh || selectedFeature.properties?.AWAL_MUSIM || selectedFeature.properties?.awal_musim || selectedFeature.properties?.AM || "-"}</span>
                 </div>
                 {selectedFeature.properties?.SIFAT && (
                   <div className="flex justify-between">

@@ -4,6 +4,7 @@ import { supabaseUploadFile } from "@/lib/supabase";
 import { useToast } from "@/components/ui/toast-provider";
 import { useConfirm } from "@/components/ui/confirm-provider";
 import { CustomSelect } from "@/components/ui/CustomSelect";
+import { getBMKGSeasonColor } from "@/lib/seasonColors";
 
 const SEASON_TYPE_OPTIONS = [
   { value: "awal_musim_hujan", label: "Prediksi Awal Musim Hujan" },
@@ -78,19 +79,31 @@ export function SeasonTab() {
     setIsUploading(true);
     try {
       const finalFileName = `prakiraan/season-${Date.now()}-${Math.random().toString(36).substring(7)}.json`;
-      let fileToUpload: File;
+      let geojson: any;
 
       if (newSeason.uploadMode === "shp") {
         const shapefile = await import("shapefile");
         const shpBytes = await newSeason.fileShp!.arrayBuffer();
         const dbfBytes = await newSeason.fileDbf!.arrayBuffer();
-        const geojson = await shapefile.read(shpBytes, dbfBytes);
-        fileToUpload = new File([JSON.stringify(geojson)], "converted.json", {
-          type: "application/json",
-        });
+        geojson = await shapefile.read(shpBytes, dbfBytes);
       } else {
-        fileToUpload = newSeason.fileJson!;
+        const text = await newSeason.fileJson!.text();
+        geojson = JSON.parse(text);
       }
+
+      // Terapkan warna otomatis dari library BMKG permanen berdasarkan nilai PMK / PMH / AWAL_MUSIM & kategori
+      if (geojson && geojson.features) {
+        geojson.features.forEach((f: any) => {
+          const p = f.properties || {};
+          const val = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.PERIODE || p.periode || p.ZOM;
+          const bmkgColor = getBMKGSeasonColor(val, newSeason.category);
+          f.properties = { ...p, fill_color: bmkgColor };
+        });
+      }
+
+      const fileToUpload = new File([JSON.stringify(geojson)], "converted.json", {
+        type: "application/json",
+      });
 
       const uploadedUrl = await supabaseUploadFile("rainfall-data", finalFileName, fileToUpload);
       if (!uploadedUrl) throw new Error("Gagal mengupload file ke Storage");
@@ -145,13 +158,17 @@ export function SeasonTab() {
           </div>
 
           {/* Info Box */}
-          <div className="mb-4 p-3 rounded-xl bg-green-50 border border-green-200 flex items-start gap-2">
-            <span className="material-symbols-outlined text-green-600 text-[18px] shrink-0 mt-0.5">info</span>
-            <p className="text-xs text-green-800 font-medium">
-              Halaman ini khusus upload data <strong>Prediksi Awal Musim Hujan</strong> dan{" "}
-              <strong>Prediksi Awal Musim Kemarau</strong>. Kolom atribut SHP harus memiliki{" "}
-              <strong>AWAL_MUSIM</strong> (contoh: MAR III, APR I, dst.).
-            </p>
+          <div className="mb-4 p-3.5 rounded-xl bg-green-50 border border-green-200 flex items-start gap-2.5">
+            <span className="material-symbols-outlined text-green-600 text-[20px] shrink-0 mt-0.5">info</span>
+            <div className="text-xs text-green-800 space-y-1">
+              <p className="font-semibold">
+                Upload Data Prediksi Awal Musim Hujan & Kemarau
+              </p>
+              <p className="text-[11px] text-green-700 leading-relaxed">
+                • Kolom atribut DBF yang dibaca: <strong>NO_ZOM_NAS</strong> (Nomor ZOM), <strong>NAMA_ZOM</strong> (Nama Zona), dan <strong>PMK</strong> / <strong>PMH</strong> / <strong>AWAL_MUSIM</strong> (Periode Awal Musim).<br/>
+                • <strong>Pewarnaan Otomatis:</strong> Sistem menggunakan <em>Library Resmi Warna BMKG (AMH & AMK)</em> permanen untuk mewarnai setiap kategori dasarian secara otomatis.
+              </p>
+            </div>
           </div>
 
           <form onSubmit={handleUpload} className="flex flex-col gap-4 flex-1">
@@ -213,7 +230,7 @@ export function SeasonTab() {
                   {/* DBF */}
                   <div>
                     <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex justify-between items-center">
-                      <span>File .DBF (Atribut)</span>
+                      <span>File .DBF (Atribut: NAMA_ZOM, PMK)</span>
                       {newSeason.fileDbf && (
                         <span className="text-emerald-500 text-[10px] bg-emerald-50 px-2 py-0.5 rounded-full">Terpilih</span>
                       )}
@@ -242,7 +259,7 @@ export function SeasonTab() {
                   <div className="col-span-full mt-1">
                     <p className="text-xs text-slate-500 flex items-start gap-1.5 bg-white p-3 rounded-xl border border-slate-100">
                       <span className="material-symbols-outlined text-[16px] text-amber-500 shrink-0">info</span>
-                      File akan dikonversi otomatis. Pastikan kedua file valid dan kolom atribut sesuai.
+                      File SHP & DBF akan dikonversi otomatis ke GeoJSON.
                     </p>
                   </div>
                 </div>

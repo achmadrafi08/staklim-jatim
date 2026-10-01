@@ -304,6 +304,7 @@ export function RainfallMap({ forecast }: RainfallMapProps) {
   const [showKecamatan, setShowKecamatan] = useState(true);
   const [userLocation, setUserLocation] = useState<L.LatLng | null>(null);
   const [isLocating, setIsLocating] = useState(false);
+  const [selectedLocationFeature, setSelectedLocationFeature] = useState<any>(null);
 
   const geoJsonRef = useRef<L.GeoJSON>(null);
   const kecamatanGeoJsonRef = useRef<L.GeoJSON>(null);
@@ -360,10 +361,34 @@ export function RainfallMap({ forecast }: RainfallMapProps) {
     
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const latlng = L.latLng(position.coords.latitude, position.coords.longitude);
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        const latlng = L.latLng(lat, lng);
         setUserLocation(latlng);
-        map.flyTo(latlng, 9);
+        map.flyTo(latlng, 11);
         setIsLocating(false);
+
+        // Cari fitur yang cocok dengan titik lokasi user
+        const pt = turf.point([lng, lat]);
+        
+        // Cari di layer kecamatan dulu (lebih detail), lalu kabupaten
+        const searchIn = showKecamatan ? (coloredKecamatanData || kecamatanData) : (coloredKabupatenData || kabupatenData);
+        let found: any = null;
+        if (searchIn?.features) {
+          found = searchIn.features.find((f: any) => {
+            try { return turf.booleanPointInPolygon(pt, f); } catch { return false; }
+          });
+        }
+        // Fallback ke layer lainnya jika tidak ketemu
+        if (!found) {
+          const fallback = showKecamatan ? (coloredKabupatenData || kabupatenData) : (coloredKecamatanData || kecamatanData);
+          if (fallback?.features) {
+            found = fallback.features.find((f: any) => {
+              try { return turf.booleanPointInPolygon(pt, f); } catch { return false; }
+            });
+          }
+        }
+        setSelectedLocationFeature(found || null);
       },
       (error) => {
         console.error("Geolocation error:", error);
@@ -376,7 +401,7 @@ export function RainfallMap({ forecast }: RainfallMapProps) {
         setIsLocating(false);
       },
       {
-        enableHighAccuracy: false, // Matikan high accuracy agar tidak timeout di PC Desktop tanpa GPS
+        enableHighAccuracy: false,
         timeout: 20000,
         maximumAge: 0
       }
@@ -735,16 +760,66 @@ export function RainfallMap({ forecast }: RainfallMapProps) {
             />
           )}
           
-          {userLocation && (
-            <Marker position={userLocation}>
-              <Popup>
-                <div className="text-center">
-                  <span className="font-bold text-slate-800 block">Lokasi Anda Saat Ini</span>
-                  <span className="text-xs text-slate-500">{userLocation.lat.toFixed(4)}, {userLocation.lng.toFixed(4)}</span>
-                </div>
-              </Popup>
-            </Marker>
-          )}
+          {userLocation && (() => {
+            const locProp = selectedLocationFeature?.properties;
+            const locName = locProp?.KECAMATAN || locProp?.NAMAKEC || locProp?.NAMOBJ || locProp?.KABUPATEN || locProp?.kabupaten || locProp?.WADMKK || "Lokasi Anda";
+            const locValue = locProp?._ch_value || 0;
+            const locColor = locProp?._ch_color || getColor(locValue);
+            const locLabel = locProp?._ch_info || getLabel(locValue);
+            return (
+              <Marker
+                position={userLocation}
+                icon={L.divIcon({
+                  className: "custom-user-location-marker",
+                  html: `<div style="position:relative;width:24px;height:24px">
+                    <div style="position:absolute;inset:0;background:#2563eb;border:3px solid white;border-radius:50%;box-shadow:0 0 0 3px rgba(37,99,235,0.3);animation:ping 1.5s cubic-bezier(0,0,0.2,1) infinite"></div>
+                    <div style="position:absolute;inset:0;background:#2563eb;border:3px solid white;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.3)"></div>
+                  </div>`,
+                  iconSize: [24, 24],
+                  iconAnchor: [12, 12],
+                })}
+              >
+                <Popup className="custom-bmkg-popup">
+                  <div style={{ minWidth: "220px", padding: 0, fontFamily: "sans-serif" }}>
+                    <div style={{ backgroundColor: "#0d6efd", color: "white", padding: "10px 15px", fontWeight: "bold", textAlign: "center", fontSize: "14px" }}>
+                      DETAIL INFO
+                    </div>
+                    <div style={{ padding: "15px", background: "white" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px dashed #e2e8f0", paddingBottom: "10px", marginBottom: "12px", fontSize: "13px" }}>
+                        <span style={{ color: "#475569" }}>Wilayah:</span>
+                        <span style={{ color: "#0d6efd", fontWeight: "600" }}>{locName}</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px dashed #e2e8f0", paddingBottom: "10px", marginBottom: "12px", fontSize: "12px" }}>
+                        <span style={{ color: "#475569" }}>Koordinat:</span>
+                        <span style={{ color: "#1e293b", fontWeight: "500" }}>{userLocation.lat.toFixed(4)}, {userLocation.lng.toFixed(4)}</span>
+                      </div>
+                      {forecast && (
+                        <div style={{ textAlign: "center" }}>
+                          <span style={{ color: "#64748b", fontSize: "11px", display: "block", marginBottom: "6px" }}>Prakiraan Curah Hujan</span>
+                          <div style={{
+                            backgroundColor: locColor,
+                            color: (locValue > 150 || locValue <= 20 || locProp?._ch_color) ? "white" : "black",
+                            textShadow: "0 1px 2px rgba(0,0,0,0.4)",
+                            padding: "6px 14px",
+                            borderRadius: "8px",
+                            fontWeight: "bold",
+                            display: "inline-block",
+                            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                            fontSize: "12px"
+                          }}>
+                            {locValue > 0 || locProp?._ch_color ? locLabel : "Belum ada data"}
+                          </div>
+                        </div>
+                      )}
+                      {!forecast && (
+                        <p style={{ textAlign: "center", color: "#64748b", fontSize: "12px" }}>Pilih periode prakiraan untuk melihat data curah hujan di lokasi ini.</p>
+                      )}
+                    </div>
+                  </div>
+                </Popup>
+              </Marker>
+            );
+          })()}
         </MapContainer>
       </div>
 
