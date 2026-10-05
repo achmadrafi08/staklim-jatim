@@ -294,7 +294,7 @@ function AdminDashboardContent() {
                 { id: 'observations', icon: 'fact_check', label: 'Data Pengamatan' },
                 { id: 'climate', icon: 'thermostat', label: 'Perubahan Iklim' },
                 { id: 'rainfall', icon: 'rainy', label: 'Prakiraan Hujan' },
-                { id: 'season', icon: 'calendar_today', label: 'Prediksi Awal Musim' },
+                { id: 'season', icon: 'calendar_today', label: 'Prediksi Musim' },
                 { id: 'tempmaps', icon: 'map', label: 'Peta Curah Hujan' },
                 { id: 'hth', icon: 'wb_sunny', label: 'Hari Tanpa Hujan' },
                 { id: 'iklim_publikasi', icon: 'menu_book', label: 'Publikasi Iklim' },
@@ -374,7 +374,7 @@ function AdminDashboardContent() {
                 { activeTab === 'org' && 'Struktur Organisasi' }
                 { activeTab === 'tempmaps' && 'Peta Perubahan Suhu' }
                 { activeTab === 'rainfall' && 'Prakiraan Curah Hujan' }
-                { activeTab === 'season' && 'Prediksi Awal Musim' }
+                { activeTab === 'season' && 'Prediksi Musim (Terpadu)' }
                 { activeTab === 'hth' && 'Update Data HTH' }
                 { activeTab === 'iklim_publikasi' && 'Publikasi & Prediksi Iklim' }
                 { activeTab === 'pelayanan' && 'Kelola Konten Pelayanan Publik' }

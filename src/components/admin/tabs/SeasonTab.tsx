@@ -6,9 +6,70 @@ import { useConfirm } from "@/components/ui/confirm-provider";
 import { CustomSelect } from "@/components/ui/CustomSelect";
 import { getBMKGSeasonColor } from "@/lib/seasonColors";
 
-const SEASON_TYPE_OPTIONS = [
-  { value: "awal_musim_hujan", label: "Prediksi Awal Musim Hujan" },
-  { value: "awal_musim_kemarau", label: "Prediksi Awal Musim Kemarau" },
+// ============================================================
+// KONFIGURASI KATEGORI PREDIKSI MUSIM
+// ============================================================
+const SEASON_CATEGORIES = [
+  {
+    value: "awal_musim_hujan",
+    label: "Prediksi Awal Musim Hujan",
+    icon: "water_drop",
+    color: "blue",
+    defaultColumn: "PMK",
+    columns: ["PMK", "PMH", "AWAL_MUSIM", "AM", "PERIODE"],
+    description: "Upload data prakiraan awal musim hujan per ZOM Jawa Timur.",
+    dbfInfo: "Kolom utama: NO_ZOM_NAS, NAMA_ZOM, PMK / PMH",
+  },
+  {
+    value: "awal_musim_kemarau",
+    label: "Prediksi Awal Musim Kemarau",
+    icon: "wb_sunny",
+    color: "orange",
+    defaultColumn: "PMK",
+    columns: ["PMK", "AWAL_MUSIM", "AM", "PERIODE"],
+    description: "Upload data prakiraan awal musim kemarau per ZOM Jawa Timur.",
+    dbfInfo: "Kolom utama: NO_ZOM_NAS, NAMA_ZOM, PMK / AWAL_MUSIM",
+  },
+  {
+    value: "sifat_musim",
+    label: "Prediksi Sifat Musim",
+    icon: "analytics",
+    color: "purple",
+    defaultColumn: "Sifat_MK",
+    columns: ["Sifat_MK", "SIFAT", "SIFAT_MUSIM", "SM", "KET", "INFO"],
+    description: "Upload data prakiraan sifat musim (Atas Normal / Normal / Bawah Normal).",
+    dbfInfo: "Kolom utama: NO_ZOM_NAS, NAMA_ZOM, Sifat_MK / SIFAT",
+  },
+  {
+    value: "perbandingan_musim",
+    label: "Prediksi Perbandingan Musim",
+    icon: "compare",
+    color: "teal",
+    defaultColumn: "Mamun_PMK",
+    columns: ["Mamun_PMK", "PERB", "PERBANDINGAN", "BAND", "KET", "INFO"],
+    description: "Upload data perbandingan musim terhadap normal.",
+    dbfInfo: "Kolom utama: NO_ZOM_NAS, NAMA_ZOM, Mamun_PMK / PERB",
+  },
+  {
+    value: "puncak_musim",
+    label: "Prediksi Puncak Musim",
+    icon: "trending_up",
+    color: "red",
+    defaultColumn: "Puncak_MK",
+    columns: ["Puncak_MK", "PUNCAK", "PEAK", "PUNCAK_MUSIM", "PM", "KET"],
+    description: "Upload data prakiraan puncak musim per ZOM.",
+    dbfInfo: "Kolom utama: NO_ZOM_NAS, NAMA_ZOM, Puncak_MK / PUNCAK",
+  },
+  {
+    value: "curah_hujan_musim",
+    label: "Prediksi Curah Hujan Musim",
+    icon: "water",
+    color: "cyan",
+    defaultColumn: "curah_MK",
+    columns: ["curah_MK", "CH", "CURAH_HUJAN", "CURAHHUJAN", "RAIN", "KET"],
+    description: "Upload data prakiraan curah hujan musiman per ZOM.",
+    dbfInfo: "Kolom utama: NO_ZOM_NAS, NAMA_ZOM, curah_MK / CH",
+  },
 ];
 
 const MONTH_OPTIONS = Array.from({ length: 12 }, (_, i) => {
@@ -18,6 +79,18 @@ const MONTH_OPTIONS = Array.from({ length: 12 }, (_, i) => {
   return { value: monthStr, label: monthName };
 });
 
+const COLOR_MAP: Record<string, { bg: string; text: string; border: string; badge: string }> = {
+  blue: { bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-100", badge: "bg-blue-100 text-blue-700" },
+  orange: { bg: "bg-orange-50", text: "text-orange-700", border: "border-orange-100", badge: "bg-orange-100 text-orange-700" },
+  purple: { bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-100", badge: "bg-purple-100 text-purple-700" },
+  teal: { bg: "bg-teal-50", text: "text-teal-700", border: "border-teal-100", badge: "bg-teal-100 text-teal-700" },
+  red: { bg: "bg-red-50", text: "text-red-700", border: "border-red-100", badge: "bg-red-100 text-red-700" },
+  cyan: { bg: "bg-cyan-50", text: "text-cyan-700", border: "border-cyan-100", badge: "bg-cyan-100 text-cyan-700" },
+};
+
+// All category query
+const ALL_SEASON_QUERY = "or=(category.eq.awal_musim_hujan,category.eq.awal_musim_kemarau,category.eq.awal_musim,category.eq.sifat_musim,category.eq.perbandingan_musim,category.eq.puncak_musim,category.eq.curah_hujan_musim)&order=year.desc,month.desc,created_at.desc";
+
 export function SeasonTab() {
   const confirm = useConfirm();
   const { success, error } = useToast();
@@ -26,45 +99,71 @@ export function SeasonTab() {
     "rainfall-data"
   );
 
-  const [filterType, setFilterType] = useState<string>("all");
+  const [activeCategory, setActiveCategory] = useState<string>("awal_musim_hujan");
+  const [filterCategory, setFilterCategory] = useState<string>("all");
+
+  const currentCatConfig = SEASON_CATEGORIES.find(c => c.value === activeCategory) || SEASON_CATEGORIES[0];
+  const colors = COLOR_MAP[currentCatConfig.color];
+
   const [newSeason, setNewSeason] = useState<{
     year: number;
     month: string;
-    category: string;
     label: string;
     uploadMode: "shp" | "json";
     fileShp: File | null;
     fileDbf: File | null;
     fileJson: File | null;
+    dataColumn: string;
+    customColumn: string;
   }>({
     year: new Date().getFullYear(),
     month: "01",
-    category: "awal_musim_hujan",
     label: "",
     uploadMode: "shp",
     fileShp: null,
     fileDbf: null,
     fileJson: null,
+    dataColumn: SEASON_CATEGORIES[0].defaultColumn,
+    customColumn: "",
   });
 
   const [isUploading, setIsUploading] = useState(false);
-
-  const SEASON_QUERY = "or=(category.eq.awal_musim_hujan,category.eq.awal_musim_kemarau,category.eq.awal_musim)&order=year.desc,month.desc,created_at.desc";
+  const [showCustomColumn, setShowCustomColumn] = useState(false);
 
   useEffect(() => {
-    load(SEASON_QUERY);
+    load(ALL_SEASON_QUERY);
   }, [load]);
+
+  // When category changes, reset column to default
+  useEffect(() => {
+    const cat = SEASON_CATEGORIES.find(c => c.value === activeCategory);
+    if (cat) {
+      setNewSeason(prev => ({ ...prev, dataColumn: cat.defaultColumn, customColumn: "" }));
+      setShowCustomColumn(false);
+    }
+  }, [activeCategory]);
+
+  const getCategoryConfig = (catVal: string) =>
+    SEASON_CATEGORIES.find(c => c.value === catVal) || null;
 
   const getCategoryLabel = (catVal: string) => {
     if (catVal === "awal_musim") return "Awal Musim (Legacy)";
-    const found = SEASON_TYPE_OPTIONS.find((c) => c.value === catVal);
+    const found = getCategoryConfig(catVal);
     return found ? found.label : catVal;
   };
 
   const filteredSeasons = seasonForecasts.filter((r) => {
-    if (filterType === "all") return true;
-    return r.category === filterType;
+    if (filterCategory === "all") return true;
+    return r.category === filterCategory;
   });
+
+  // Determine which column to use from DBF
+  const getEffectiveColumn = () => {
+    if (showCustomColumn && newSeason.customColumn.trim()) {
+      return newSeason.customColumn.trim().toUpperCase();
+    }
+    return newSeason.dataColumn;
+  };
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,7 +175,10 @@ export function SeasonTab() {
       error("Harap pilih file GeoJSON (.json)!");
       return;
     }
+
+    const effectiveColumn = getEffectiveColumn();
     setIsUploading(true);
+
     try {
       const finalFileName = `prakiraan/season-${Date.now()}-${Math.random().toString(36).substring(7)}.json`;
       let geojson: any;
@@ -91,13 +193,30 @@ export function SeasonTab() {
         geojson = JSON.parse(text);
       }
 
-      // Terapkan warna otomatis dari library BMKG permanen berdasarkan nilai PMK / PMH / AWAL_MUSIM & kategori
+      // Apply color mapping based on category and selected column
       if (geojson && geojson.features) {
         geojson.features.forEach((f: any) => {
           const p = f.properties || {};
-          const val = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.PERIODE || p.periode || p.ZOM;
-          const bmkgColor = getBMKGSeasonColor(val, newSeason.category);
-          f.properties = { ...p, fill_color: bmkgColor };
+          // Try exact column first, then fallback columns
+          const catConfig = getCategoryConfig(activeCategory);
+          const allColumns = [effectiveColumn, ...(catConfig?.columns || [])];
+          let val: string | undefined;
+          for (const col of allColumns) {
+            const v = p[col] || p[col.toLowerCase()];
+            if (v) { val = String(v); break; }
+          }
+          // Also try legacy columns for awal musim
+          if (!val) {
+            val = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim;
+          }
+          // Determine color
+          const bmkgColor = getBMKGSeasonColor(val, activeCategory);
+          f.properties = { 
+            ...p, 
+            fill_color: bmkgColor,
+            _data_column: effectiveColumn,
+            _category: activeCategory,
+          };
         });
       }
 
@@ -110,18 +229,18 @@ export function SeasonTab() {
 
       const successAdd = await add(
         {
-          category: newSeason.category,
+          category: activeCategory,
           year: newSeason.year,
           month: newSeason.month,
-          label: newSeason.label,
+          label: newSeason.label || `${getCategoryLabel(activeCategory)} ${newSeason.year}`,
           file_path: uploadedUrl,
+          data_column: effectiveColumn,
         },
-        "Data Peta Prediksi Awal Musim berhasil ditambahkan!"
+        `Data ${getCategoryLabel(activeCategory)} berhasil ditambahkan!`
       );
 
       if (successAdd) {
         setNewSeason({
-          category: "awal_musim_hujan",
           year: new Date().getFullYear(),
           month: "01",
           label: "",
@@ -129,8 +248,11 @@ export function SeasonTab() {
           fileShp: null,
           fileDbf: null,
           fileJson: null,
+          dataColumn: currentCatConfig.defaultColumn,
+          customColumn: "",
         });
-        load(SEASON_QUERY);
+        setShowCustomColumn(false);
+        load(ALL_SEASON_QUERY);
       }
     } catch (err: any) {
       error(err.message || "Terjadi kesalahan saat memproses data.");
@@ -147,26 +269,48 @@ export function SeasonTab() {
 
   return (
     <>
+      {/* Category Tabs */}
+      <div className="mb-6">
+        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Pilih Kategori Prediksi Musim</p>
+        <div className="flex flex-wrap gap-2">
+          {SEASON_CATEGORIES.map(cat => {
+            const c = COLOR_MAP[cat.color];
+            const isActive = activeCategory === cat.value;
+            return (
+              <button
+                key={cat.value}
+                onClick={() => setActiveCategory(cat.value)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold border transition-all duration-200 ${
+                  isActive
+                    ? `${c.bg} ${c.text} border-current shadow-sm scale-[1.02]`
+                    : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50 hover:text-slate-700"
+                }`}
+              >
+                <span className="material-symbols-outlined text-[16px]">{cat.icon}</span>
+                {cat.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Form Upload */}
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow duration-300 p-6 flex flex-col h-fit sticky top-28">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 rounded-lg bg-green-100 text-green-600 flex items-center justify-center">
+            <div className={`w-8 h-8 rounded-lg ${colors.bg} ${colors.text} flex items-center justify-center`}>
               <span className="material-symbols-outlined text-[18px]">cloud_upload</span>
             </div>
-            <h3 className="text-lg font-bold text-slate-800">Upload Peta Awal Musim</h3>
+            <h3 className="text-lg font-bold text-slate-800">Upload {currentCatConfig.label}</h3>
           </div>
 
           {/* Info Box */}
-          <div className="mb-4 p-3.5 rounded-xl bg-green-50 border border-green-200 flex items-start gap-2.5">
-            <span className="material-symbols-outlined text-green-600 text-[20px] shrink-0 mt-0.5">info</span>
-            <div className="text-xs text-green-800 space-y-1">
-              <p className="font-semibold">
-                Upload Data Prediksi Awal Musim Hujan & Kemarau
-              </p>
-              <p className="text-[11px] text-green-700 leading-relaxed">
-                • Kolom atribut DBF yang dibaca: <strong>NO_ZOM_NAS</strong> (Nomor ZOM), <strong>NAMA_ZOM</strong> (Nama Zona), dan <strong>PMK</strong> / <strong>PMH</strong> / <strong>AWAL_MUSIM</strong> (Periode Awal Musim).<br/>
-                • <strong>Pewarnaan Otomatis:</strong> Sistem menggunakan <em>Library Resmi Warna BMKG (AMH & AMK)</em> permanen untuk mewarnai setiap kategori dasarian secara otomatis.
+          <div className={`mb-4 p-3.5 rounded-xl ${colors.bg} border ${colors.border} flex items-start gap-2.5`}>
+            <span className={`material-symbols-outlined ${colors.text} text-[20px] shrink-0 mt-0.5`}>info</span>
+            <div className={`text-xs space-y-1`}>
+              <p className={`font-semibold ${colors.text}`}>{currentCatConfig.description}</p>
+              <p className="text-[11px] text-slate-600 leading-relaxed">
+                {currentCatConfig.dbfInfo}
               </p>
             </div>
           </div>
@@ -183,7 +327,7 @@ export function SeasonTab() {
                     onChange={() => setNewSeason({ ...newSeason, uploadMode: "shp" })}
                     className="accent-primary"
                   />
-                  <span className="text-sm font-medium">SHP & DBF</span>
+                  <span className="text-sm font-medium">SHP &amp; DBF</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -215,9 +359,7 @@ export function SeasonTab() {
                     >
                       <div className="flex items-center gap-3 truncate">
                         <span className="material-symbols-outlined text-primary/70">upload_file</span>
-                        <span className={`text-sm truncate font-medium ${
-                          newSeason.fileShp ? "text-primary" : "text-slate-400 group-hover:text-slate-600"
-                        }`}>
+                        <span className={`text-sm truncate font-medium ${newSeason.fileShp ? "text-primary" : "text-slate-400 group-hover:text-slate-600"}`}>
                           {newSeason.fileShp ? newSeason.fileShp.name : "Pilih file .shp..."}
                         </span>
                       </div>
@@ -230,7 +372,7 @@ export function SeasonTab() {
                   {/* DBF */}
                   <div>
                     <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex justify-between items-center">
-                      <span>File .DBF (Atribut: NAMA_ZOM, PMK)</span>
+                      <span>File .DBF (Atribut Data)</span>
                       {newSeason.fileDbf && (
                         <span className="text-emerald-500 text-[10px] bg-emerald-50 px-2 py-0.5 rounded-full">Terpilih</span>
                       )}
@@ -244,9 +386,7 @@ export function SeasonTab() {
                     >
                       <div className="flex items-center gap-3 truncate">
                         <span className="material-symbols-outlined text-primary/70">upload_file</span>
-                        <span className={`text-sm truncate font-medium ${
-                          newSeason.fileDbf ? "text-primary" : "text-slate-400 group-hover:text-slate-600"
-                        }`}>
+                        <span className={`text-sm truncate font-medium ${newSeason.fileDbf ? "text-primary" : "text-slate-400 group-hover:text-slate-600"}`}>
                           {newSeason.fileDbf ? newSeason.fileDbf.name : "Pilih file .dbf..."}
                         </span>
                       </div>
@@ -259,7 +399,7 @@ export function SeasonTab() {
                   <div className="col-span-full mt-1">
                     <p className="text-xs text-slate-500 flex items-start gap-1.5 bg-white p-3 rounded-xl border border-slate-100">
                       <span className="material-symbols-outlined text-[16px] text-amber-500 shrink-0">info</span>
-                      File SHP & DBF akan dikonversi otomatis ke GeoJSON.
+                      File SHP &amp; DBF akan dikonversi otomatis ke GeoJSON.
                     </p>
                   </div>
                 </div>
@@ -280,9 +420,7 @@ export function SeasonTab() {
                   >
                     <div className="flex items-center gap-3 truncate">
                       <span className="material-symbols-outlined text-primary/70">data_object</span>
-                      <span className={`text-sm truncate font-medium ${
-                        newSeason.fileJson ? "text-primary" : "text-slate-400 group-hover:text-slate-600"
-                      }`}>
+                      <span className={`text-sm truncate font-medium ${newSeason.fileJson ? "text-primary" : "text-slate-400 group-hover:text-slate-600"}`}>
                         {newSeason.fileJson ? newSeason.fileJson.name : "Pilih file .json..."}
                       </span>
                     </div>
@@ -294,15 +432,37 @@ export function SeasonTab() {
               )}
             </div>
 
-            {/* Jenis Musim */}
+            {/* Kolom Data */}
             <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Jenis Prediksi Musim</label>
-              <CustomSelect
-                required
-                value={newSeason.category}
-                onChange={(val) => setNewSeason({ ...newSeason, category: val })}
-                options={SEASON_TYPE_OPTIONS}
-              />
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Kolom Data di DBF/GeoJSON</label>
+                <button
+                  type="button"
+                  onClick={() => setShowCustomColumn(!showCustomColumn)}
+                  className="text-[10px] font-bold text-primary hover:underline"
+                >
+                  {showCustomColumn ? "Pilih dari daftar" : "Masukkan manual"}
+                </button>
+              </div>
+              {showCustomColumn ? (
+                <input
+                  type="text"
+                  value={newSeason.customColumn}
+                  onChange={(e) => setNewSeason({ ...newSeason, customColumn: e.target.value })}
+                  placeholder={`Nama kolom, misal: ${currentCatConfig.defaultColumn}`}
+                  className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-mono uppercase placeholder:normal-case"
+                />
+              ) : (
+                <CustomSelect
+                  value={newSeason.dataColumn}
+                  onChange={(val) => setNewSeason({ ...newSeason, dataColumn: val })}
+                  options={currentCatConfig.columns.map(c => ({ value: c, label: c }))}
+                />
+              )}
+              <p className="text-[11px] text-slate-400 mt-1.5 flex items-center gap-1">
+                <span className="material-symbols-outlined text-[14px]">key</span>
+                Kolom yang akan dibaca dari atribut data: <strong className="text-slate-600 font-mono">{getEffectiveColumn()}</strong>
+              </p>
             </div>
 
             {/* Tahun & Bulan */}
@@ -334,7 +494,7 @@ export function SeasonTab() {
                 type="text"
                 value={newSeason.label}
                 onChange={(e) => setNewSeason({ ...newSeason, label: e.target.value })}
-                placeholder="Contoh: Awal Musim Hujan 2026/2027"
+                placeholder={`Contoh: ${currentCatConfig.label} 2026/2027`}
                 className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-300"
               />
             </div>
@@ -343,11 +503,19 @@ export function SeasonTab() {
               <button
                 type="submit"
                 disabled={isUploading}
-                className={`w-full text-white shadow-md shadow-green-500/20 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
+                className={`w-full text-white shadow-md py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
                   isUploading
-                    ? "bg-green-400 cursor-wait"
-                    : "bg-gradient-to-r from-green-600 to-emerald-500 hover:scale-[1.02] active:scale-95"
+                    ? "bg-slate-400 cursor-wait"
+                    : `bg-gradient-to-r from-${currentCatConfig.color === "blue" ? "blue" : currentCatConfig.color === "orange" ? "orange" : currentCatConfig.color === "purple" ? "purple" : currentCatConfig.color === "teal" ? "teal" : currentCatConfig.color === "red" ? "red" : "cyan"}-600 to-${currentCatConfig.color === "blue" ? "indigo" : currentCatConfig.color === "orange" ? "amber" : currentCatConfig.color === "purple" ? "violet" : currentCatConfig.color === "teal" ? "emerald" : currentCatConfig.color === "red" ? "rose" : "sky"}-500 hover:scale-[1.02] active:scale-95`
                 }`}
+                style={{
+                  background: isUploading ? undefined : currentCatConfig.color === "blue" ? "linear-gradient(to right, #2563eb, #4f46e5)" :
+                    currentCatConfig.color === "orange" ? "linear-gradient(to right, #ea580c, #d97706)" :
+                    currentCatConfig.color === "purple" ? "linear-gradient(to right, #9333ea, #7c3aed)" :
+                    currentCatConfig.color === "teal" ? "linear-gradient(to right, #0d9488, #059669)" :
+                    currentCatConfig.color === "red" ? "linear-gradient(to right, #dc2626, #e11d48)" :
+                    "linear-gradient(to right, #0891b2, #0284c7)"
+                }}
               >
                 {isUploading ? (
                   <>
@@ -357,7 +525,7 @@ export function SeasonTab() {
                 ) : (
                   <>
                     <span className="material-symbols-outlined text-[20px]">cloud_upload</span>
-                    <span>Upload Data Awal Musim</span>
+                    <span>Upload {currentCatConfig.label}</span>
                   </>
                 )}
               </button>
@@ -369,81 +537,89 @@ export function SeasonTab() {
         <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow duration-300 p-6 flex flex-col gap-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-green-100 text-green-600 flex items-center justify-center">
-                <span className="material-symbols-outlined text-[18px]">calendar_today</span>
+              <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center">
+                <span className="material-symbols-outlined text-[18px]">list</span>
               </div>
-              <h3 className="text-lg font-bold text-slate-800">Daftar Data Awal Musim ({filteredSeasons.length})</h3>
+              <h3 className="text-lg font-bold text-slate-800">Semua Data Prediksi Musim ({filteredSeasons.length})</h3>
             </div>
 
-            <div className="w-full sm:w-64">
+            <div className="w-full sm:w-72">
               <CustomSelect
-                value={filterType}
-                onChange={(val) => setFilterType(val)}
+                value={filterCategory}
+                onChange={(val) => setFilterCategory(val)}
                 options={[
-                  { value: "all", label: "Semua Jenis Musim" },
-                  ...SEASON_TYPE_OPTIONS,
+                  { value: "all", label: "Semua Kategori" },
+                  ...SEASON_CATEGORIES.map(c => ({ value: c.value, label: c.label })),
                 ]}
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {filteredSeasons.map((r) => (
-              <div
-                key={r.id}
-                className="p-5 rounded-2xl border border-slate-100 bg-slate-50/50 hover:bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3 relative group overflow-hidden"
-              >
-                <div className="flex justify-between items-start relative z-10 gap-2">
-                  <div className="flex-1">
-                    <span
-                      className={`text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full inline-block mb-2 ${
-                        r.category === "awal_musim_hujan"
-                          ? "bg-blue-100 text-blue-700"
-                          : r.category === "awal_musim_kemarau"
-                          ? "bg-orange-100 text-orange-700"
-                          : "bg-slate-100 text-slate-600"
-                      }`}
-                    >
-                      {getCategoryLabel(r.category)}
-                    </span>
-                    <h4 className="font-bold text-slate-800 text-[15px] flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[18px] text-slate-400">calendar_month</span>
-                      {new Date(r.year, parseInt(r.month) - 1, 1).toLocaleString("id-ID", {
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </h4>
-                    {r.label && (
-                      <p className="text-xs text-slate-500 font-bold mt-1 bg-white inline-block px-2 py-0.5 rounded border border-slate-100">
-                        {r.label}
-                      </p>
-                    )}
-                  </div>
-                  <button
-                    onClick={() => handleDelete(r.id, r.file_path)}
-                    className="w-8 h-8 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-sm shrink-0"
-                    title="Hapus Data"
+          {isLoading ? (
+            <div className="py-16 flex flex-col items-center justify-center text-slate-400">
+              <span className="material-symbols-outlined text-4xl mb-2 animate-spin">progress_activity</span>
+              <p className="text-sm font-medium">Memuat data...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {filteredSeasons.map((r) => {
+                const catConfig = getCategoryConfig(r.category);
+                const c = COLOR_MAP[catConfig?.color || "blue"];
+                return (
+                  <div
+                    key={r.id}
+                    className="p-5 rounded-2xl border border-slate-100 bg-slate-50/50 hover:bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3 relative group overflow-hidden"
                   >
-                    <span className="material-symbols-outlined text-[18px]">delete</span>
-                  </button>
+                    <div className="flex justify-between items-start relative z-10 gap-2">
+                      <div className="flex-1">
+                        <span className={`text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full inline-block mb-2 ${c.badge}`}>
+                          {catConfig ? catConfig.label : r.category}
+                        </span>
+                        <h4 className="font-bold text-slate-800 text-[15px] flex items-center gap-2">
+                          <span className="material-symbols-outlined text-[18px] text-slate-400">calendar_month</span>
+                          {new Date(r.year, parseInt(r.month) - 1, 1).toLocaleString("id-ID", {
+                            month: "long",
+                            year: "numeric",
+                          })}
+                        </h4>
+                        {r.label && (
+                          <p className="text-xs text-slate-500 font-bold mt-1 bg-white inline-block px-2 py-0.5 rounded border border-slate-100">
+                            {r.label}
+                          </p>
+                        )}
+                        {r.data_column && (
+                          <p className="text-[10px] text-slate-400 font-mono mt-1">
+                            Kolom: <span className="font-bold text-slate-600">{r.data_column}</span>
+                          </p>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => handleDelete(r.id, r.file_path)}
+                        className="w-8 h-8 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-sm shrink-0"
+                        title="Hapus Data"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">delete</span>
+                      </button>
+                    </div>
+                    <div
+                      className="mt-auto text-[10px] text-slate-500 font-mono bg-white p-2.5 rounded-xl border border-slate-200 line-clamp-1 relative z-10 flex items-center gap-2"
+                      title={r.file_path}
+                    >
+                      <span className="material-symbols-outlined text-[14px] text-primary">data_object</span>
+                      <span className="truncate">{r.file_path?.split("/").pop()}</span>
+                    </div>
+                  </div>
+                );
+              })}
+              {filteredSeasons.length === 0 && (
+                <div className="col-span-full py-16 flex flex-col items-center justify-center text-slate-400 border-2 border-dashed border-slate-200 rounded-2xl">
+                  <span className="material-symbols-outlined text-4xl mb-2">calendar_today</span>
+                  <p className="text-sm font-medium">Belum ada data prediksi musim.</p>
+                  <p className="text-xs text-slate-300 mt-1">Upload file di panel kiri untuk memulai.</p>
                 </div>
-                <div
-                  className="mt-auto text-[10px] text-slate-500 font-mono bg-white p-2.5 rounded-xl border border-slate-200 line-clamp-1 relative z-10 flex items-center gap-2"
-                  title={r.file_path}
-                >
-                  <span className="material-symbols-outlined text-[14px] text-primary">data_object</span>
-                  <span className="truncate">{r.file_path?.split("/").pop()}</span>
-                </div>
-              </div>
-            ))}
-            {filteredSeasons.length === 0 && (
-              <div className="col-span-full py-16 flex flex-col items-center justify-center text-slate-400 border-2 border-dashed border-slate-200 rounded-2xl">
-                <span className="material-symbols-outlined text-4xl mb-2">calendar_today</span>
-                <p className="text-sm font-medium">Belum ada data prediksi awal musim.</p>
-                <p className="text-xs text-slate-300 mt-1">Upload file SHP/DBF atau GeoJSON di panel kiri.</p>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </>

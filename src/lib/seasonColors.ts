@@ -78,9 +78,119 @@ export const AMK_COLOR_MAP: Record<string, string> = {
   "DES I": "#520677",
 };
 
+// Color map untuk Sifat Musim (Atas Normal / Normal / Bawah Normal)
+export const SIFAT_COLOR_MAP: Record<string, string> = {
+  // Atas Normal
+  "ATAS NORMAL": "#38A700",
+  "AN": "#38A700",
+  "A": "#38A700",
+  // Normal
+  "NORMAL": "#FFFF00",
+  "N": "#FFFF00",
+  // Bawah Normal
+  "BAWAH NORMAL": "#A87001",
+  "BN": "#A87001",
+  "B": "#A87001",
+};
+
+// Color map untuk Perbandingan Musim
+export const PERBANDINGAN_COLOR_MAP: Record<string, string> = {
+  "MUNDUR 3": "#70A800",
+  "MUNDUR 2": "#98E500",
+  "MUNDUR 1": "#D0FF73",
+  "SAMA": "#FFFF00",
+  "MAJU 1": "#FFD380",
+  "MAJU 2": "#E69800",
+  "MAJU 3": "#A87001",
+};
+
+// Color map untuk Puncak Musim
+export const PUNCAK_MH_COLOR_MAP: Record<string, string> = {
+  "JANUARI": "#082698",
+  "FEBRUARI": "#0A34BE",
+  "MARET": "#0F4AFC",
+  "APRIL": "#096A95",
+  "MEI": "#0C8BC1",
+  "JUNI": "#0FBAFE",
+  "JULI": "#9AFD0F",
+  "AGUSTUS": "#7BC50C",
+  "SEPTEMBER": "#5B9409",
+  "OKTOBER": "#10FE23",
+  "NOVEMBER": "#0CBC1B",
+  "DESEMBER": "#09950E",
+};
+
+export const PUNCAK_MK_COLOR_MAP: Record<string, string> = {
+  "JANUARI": "#FFB810",
+  "FEBRUARI": "#D0920D",
+  "MARET": "#966B0B",
+  "APRIL": "#FE7E10",
+  "MEI": "#D16A0D",
+  "JUNI": "#954709",
+  "JULI": "#821308",
+  "AGUSTUS": "#C71D0C",
+  "SEPTEMBER": "#FC260E",
+  "OKTOBER": "#960955",
+  "NOVEMBER": "#D10E9B",
+  "DESEMBER": "#FD0FBC",
+};
+
+// Color map untuk Curah Hujan (by range)
+export const CH_COLOR_MAP: Record<string, string> = {
+  "RENDAH": "#fcd34d",
+  "MENENGAH": "#34d399",
+  "TINGGI": "#2563eb",
+  "SANGAT TINGGI": "#1e3a8a",
+};
+
 export function getBMKGSeasonColor(val: string | number | undefined, category?: string): string {
   if (!val) return "#94a3b8";
   const s = String(val).trim().toUpperCase();
+
+  // Sifat musim: AN / N / BN
+  if (category && (category.includes("sifat"))) {
+    if (SIFAT_COLOR_MAP[s]) return SIFAT_COLOR_MAP[s];
+    for (const [key, hex] of Object.entries(SIFAT_COLOR_MAP)) {
+      if (s.includes(key)) return hex;
+    }
+    // fallback based on first char
+    if (s.startsWith("A")) return SIFAT_COLOR_MAP["AN"];
+    if (s.startsWith("B")) return SIFAT_COLOR_MAP["BN"];
+    if (s.startsWith("N")) return SIFAT_COLOR_MAP["N"];
+  }
+
+  // Perbandingan musim
+  if (category && category.includes("perbandingan")) {
+    if (PERBANDINGAN_COLOR_MAP[s]) return PERBANDINGAN_COLOR_MAP[s];
+    for (const [key, hex] of Object.entries(PERBANDINGAN_COLOR_MAP)) {
+      if (s.includes(key)) return hex;
+    }
+  }
+
+  // Puncak musim
+  if (category && category.includes("puncak")) {
+    const isKemarauPuncak = category.includes("kemarau") || category.includes("mk");
+    const pTargetMap = isKemarauPuncak ? PUNCAK_MK_COLOR_MAP : PUNCAK_MH_COLOR_MAP;
+    const pFallbackMap = isKemarauPuncak ? PUNCAK_MH_COLOR_MAP : PUNCAK_MK_COLOR_MAP;
+    
+    if (pTargetMap[s]) return pTargetMap[s];
+    if (pFallbackMap[s]) return pFallbackMap[s];
+    
+    for (const [key, hex] of Object.entries(pTargetMap)) {
+      if (s.includes(key)) return hex;
+    }
+    for (const [key, hex] of Object.entries(pFallbackMap)) {
+      if (s.includes(key)) return hex;
+    }
+  }
+
+  // Curah hujan musim
+  if (category && category.includes("curah_hujan")) {
+    if (CH_COLOR_MAP[s]) return CH_COLOR_MAP[s];
+    for (const [key, hex] of Object.entries(CH_COLOR_MAP)) {
+      if (s.includes(key)) return hex;
+    }
+  }
 
   const isKemarau = category && (category.includes("kemarau") || category.includes("amk"));
   const targetMap = isKemarau ? AMK_COLOR_MAP : AMH_COLOR_MAP;
@@ -100,3 +210,4 @@ export function getBMKGSeasonColor(val: string | number | undefined, category?: 
 
   return "#3b82f6";
 }
+

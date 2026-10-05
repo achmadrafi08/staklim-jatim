@@ -26,6 +26,7 @@ interface ForecastOption {
 
 interface SeasonMapProps {
   forecast: ForecastOption | null;
+  categoryLabel?: string; // e.g. "Sifat Musim", "Puncak Musim"
 }
 
 function MapController({ bounds }: { bounds: L.LatLngBoundsExpression | null }) {
@@ -39,7 +40,7 @@ function MapController({ bounds }: { bounds: L.LatLngBoundsExpression | null }) 
   return null;
 }
 
-export function SeasonMap({ forecast }: SeasonMapProps) {
+export function SeasonMap({ forecast, categoryLabel }: SeasonMapProps) {
   const [geoData, setGeoData] = useState<any>(null);
   const [kabBoundary, setKabBoundary] = useState<any>(null);
   const [kecBoundary, setKecBoundary] = useState<any>(null);
@@ -148,21 +149,27 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
     );
   };
 
-  // Extract unique Dasarian legend items from GeoJSON properties if available
   const legendItems = useMemo(() => {
     if (!geoData || !geoData.features || geoData.features.length === 0) return null;
 
     const itemsMap = new Map<string, { label: string; color: string }>();
+    const cat = forecast?.category || "";
 
     for (const f of geoData.features) {
       const p = f.properties || {};
-      const label = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.info || p.INFO || p.ket || p.KET;
+      const dataColumn = p._data_column;
+      let label: string | undefined;
+      if (dataColumn && p[dataColumn]) {
+        label = String(p[dataColumn]);
+      } else {
+        label = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.SIFAT || p.sifat || p.Sifat_MK || p.PUNCAK || p.puncak || p.Puncak_MK || p.Mamun_PMK || p.curah_MK || p.PERB || p.CH || p.info || p.INFO || p.ket || p.KET;
+      }
       const color = p.fill_color || p.FILL_COLOR || p.color || p.COLOR;
 
       if (label && typeof label === 'string' && label.trim() !== '') {
         const cleanLabel = label.trim();
         if (!itemsMap.has(cleanLabel)) {
-          const itemColor = color || getBMKGSeasonColor(cleanLabel, forecast?.category);
+          const itemColor = color || getBMKGSeasonColor(cleanLabel, cat);
           itemsMap.set(cleanLabel, { label: cleanLabel, color: itemColor });
         }
       }
@@ -199,9 +206,16 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
 
   const styleGeoJSON = (feature: any) => {
     const p = feature?.properties || {};
-    const val = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.PERIODE || p.periode || p.ZOM;
+    const cat = p._category || forecast?.category || "";
+    const dataColumn = p._data_column;
+    let val: string | undefined;
+    if (dataColumn && p[dataColumn]) {
+      val = String(p[dataColumn]);
+    } else {
+      val = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.PERIODE || p.periode || p.SIFAT || p.sifat || p.Sifat_MK || p.PUNCAK || p.puncak || p.Puncak_MK || p.Mamun_PMK || p.curah_MK || p.PERB || p.CH || p.ZOM;
+    }
     const customColor = p.fill_color || p.FILL_COLOR || p.color || p.COLOR;
-    const color = customColor || getBMKGSeasonColor(val, forecast?.category);
+    const color = customColor || getBMKGSeasonColor(val, cat || forecast?.category);
 
     return {
       fillColor: color,
@@ -216,8 +230,23 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
     const p = feature.properties || {};
     const zomCode = p.NO_ZOM_NAS || p.no_zom_nas || p.ZOM || p.zom || p.KODE_ZOM || p.id || "-";
     const zomNama = p.NAMA_ZOM || p.nama_zom || p.WADMKK || p.KABUPATEN || "Wilayah ZOM";
-    const awalMusim = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.PERIODE || p.periode || "Belum ditentukan";
-    const sifat = p.SIFAT || p.sifat || p.SIFAT_MUSIM || "-";
+
+    // Determine primary data field based on category or _data_column stored in properties
+    const dataColumn = p._data_column;
+    const cat = p._category || forecast?.category || "";
+    let dataValue = "-";
+    if (dataColumn && p[dataColumn]) {
+      dataValue = String(p[dataColumn]);
+    } else {
+      dataValue = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.SIFAT || p.sifat || p.Sifat_MK || p.PUNCAK || p.puncak || p.Puncak_MK || p.Mamun_PMK || p.curah_MK || p.PERB || p.CH || p.AM || p.am || p.PERIODE || p.periode || p.KET || p.ket || p.INFO || p.info || "Belum ditentukan";
+    }
+
+    // Determine label for the main field
+    const mainFieldLabel = cat.includes("sifat") ? "Sifat Musim" :
+      cat.includes("puncak") ? "Puncak Musim" :
+      cat.includes("perbandingan") ? "Perbandingan Musim" :
+      cat.includes("curah_hujan") ? "Curah Hujan Musim" :
+      "Prediksi Awal Musim";
 
     const popupContent = `
       <div class="p-3 font-sans text-slate-800 min-w-[200px]">
@@ -227,15 +256,9 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
         </div>
         <div class="space-y-1.5 text-xs">
           <div>
-            <span class="text-slate-400 font-semibold block text-[10px] uppercase">Prediksi Awal Musim</span>
-            <span class="font-black text-slate-900 text-sm">${awalMusim}</span>
+            <span class="text-slate-400 font-semibold block text-[10px] uppercase">${mainFieldLabel}</span>
+            <span class="font-black text-slate-900 text-sm">${dataValue}</span>
           </div>
-          ${sifat !== "-" ? `
-          <div class="flex justify-between border-t pt-1.5">
-            <span class="text-slate-500">Sifat Musim:</span>
-            <span class="font-bold text-slate-800">${sifat}</span>
-          </div>
-          ` : ''}
         </div>
       </div>
     `;
@@ -537,16 +560,15 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
                 {selectedFeature.properties?.NAMA_ZOM || selectedFeature.properties?.nama_zom || selectedFeature.properties?.WADMKK || selectedFeature.properties?.KABUPATEN || "-"}
               </p>
               <div className="mt-3 pt-2 border-t border-blue-200/50 space-y-1 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Awal Musim:</span>
-                  <span className="font-bold text-blue-700">{selectedFeature.properties?.PMK || selectedFeature.properties?.pmk || selectedFeature.properties?.PMH || selectedFeature.properties?.pmh || selectedFeature.properties?.AWAL_MUSIM || selectedFeature.properties?.awal_musim || selectedFeature.properties?.AM || "-"}</span>
-                </div>
-                {selectedFeature.properties?.SIFAT && (
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Sifat Musim:</span>
-                    <span className="font-bold text-slate-800">{selectedFeature.properties.SIFAT}</span>
+                {/* Render all meaningful properties */}
+                {Object.entries(selectedFeature.properties || {}).filter(([k]) =>
+                  !['fill_color','FILL_COLOR','color','COLOR','_data_column','_category'].includes(k)
+                ).slice(0, 8).map(([key, value]) => (
+                  <div key={key} className="flex justify-between">
+                    <span className="text-slate-500 font-mono uppercase text-[10px]">{key}:</span>
+                    <span className="font-bold text-slate-800 text-right max-w-[60%] truncate">{String(value)}</span>
                   </div>
-                )}
+                ))}
               </div>
             </div>
           </div>
@@ -556,7 +578,7 @@ export function SeasonMap({ forecast }: SeasonMapProps) {
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-3 flex-1">
           <h4 className="font-bold text-sm text-slate-800 flex items-center gap-2 border-b pb-3">
             <span className="material-symbols-outlined text-amber-500 text-[20px]">palette</span>
-            Keterangan (Legend) Awal Musim
+            Keterangan ({categoryLabel || "Prediksi Musim"})
           </h4>
 
           {legendItems ? (
