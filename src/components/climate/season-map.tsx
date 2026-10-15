@@ -169,7 +169,8 @@ export function SeasonMap({ forecast, categoryLabel }: SeasonMapProps) {
       if (label && typeof label === 'string' && label.trim() !== '') {
         const cleanLabel = label.trim();
         if (!itemsMap.has(cleanLabel)) {
-          const itemColor = color || getBMKGSeasonColor(cleanLabel, cat);
+          // Always compute dynamically so color library changes take effect immediately
+          const itemColor = getBMKGSeasonColor(cleanLabel, cat);
           itemsMap.set(cleanLabel, { label: cleanLabel, color: itemColor });
         }
       }
@@ -214,8 +215,8 @@ export function SeasonMap({ forecast, categoryLabel }: SeasonMapProps) {
     } else {
       val = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.PERIODE || p.periode || p.SIFAT || p.sifat || p.Sifat_MK || p.PUNCAK || p.puncak || p.Puncak_MK || p.Mamun_PMK || p.curah_MK || p.PERB || p.CH || p.ZOM;
     }
-    const customColor = p.fill_color || p.FILL_COLOR || p.color || p.COLOR;
-    const color = customColor || getBMKGSeasonColor(val, cat || forecast?.category);
+    // Always compute dynamically so color library changes take effect without re-upload
+    const color = getBMKGSeasonColor(val, cat || forecast?.category);
 
     return {
       fillColor: color,

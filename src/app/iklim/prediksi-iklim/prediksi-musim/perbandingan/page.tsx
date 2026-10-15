@@ -24,13 +24,13 @@ interface ForecastOption {
 
 // Peta warna kategori perbandingan musim untuk legenda
 const PERBANDINGAN_LEGEND = [
-  { amk: "Mundur 3 Dasarian", amh: "Maju 3 Dasarian", color: "#70A800" },
-  { amk: "Mundur 2 Dasarian", amh: "Maju 2 Dasarian", color: "#98E500" },
-  { amk: "Mundur 1 Dasarian", amh: "Maju 1 Dasarian", color: "#D0FF73" },
-  { amk: "Sama", amh: "Sama", color: "#FFFF00" },
-  { amk: "Maju 1 Dasarian", amh: "Mundur 1 Dasarian", color: "#FFD380" },
-  { amk: "Maju 2 Dasarian", amh: "Mundur 2 Dasarian", color: "#E69800" },
-  { amk: "Maju 3 Dasarian", amh: "Mundur 3 Dasarian", color: "#A87001" },
+  { amk: "Mundur ≥3 Dasarian", amh: "Maju ≥3 Dasarian", color: "#70A800", nilai: "≥3" },
+  { amk: "Mundur 2 Dasarian", amh: "Maju 2 Dasarian", color: "#98E500", nilai: "2" },
+  { amk: "Mundur 1 Dasarian", amh: "Maju 1 Dasarian", color: "#D0FF73", nilai: "1" },
+  { amk: "Sama", amh: "Sama", color: "#FFFF00", nilai: "0" },
+  { amk: "Maju 1 Dasarian", amh: "Mundur 1 Dasarian", color: "#FFD380", nilai: "-1" },
+  { amk: "Maju 2 Dasarian", amh: "Mundur 2 Dasarian", color: "#E69800", nilai: "-2" },
+  { amk: "Maju ≥3 Dasarian", amh: "Mundur ≥3 Dasarian", color: "#A87001", nilai: "≤-3" },
 ];
 
 export default function PerbandinganMusimPage() {
