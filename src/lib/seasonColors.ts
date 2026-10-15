@@ -95,6 +95,7 @@ export const SIFAT_COLOR_MAP: Record<string, string> = {
 
 // Color map untuk Perbandingan Musim
 export const PERBANDINGAN_COLOR_MAP: Record<string, string> = {
+  // Nilai teks
   "MUNDUR 3": "#70A800",
   "MUNDUR 2": "#98E500",
   "MUNDUR 1": "#D0FF73",
@@ -102,10 +103,32 @@ export const PERBANDINGAN_COLOR_MAP: Record<string, string> = {
   "MAJU 1": "#FFD380",
   "MAJU 2": "#E69800",
   "MAJU 3": "#A87001",
+  // Nilai numerik: minus = Maju (coklat/oranye), plus = Mundur (hijau), 0 = Sama
+  "-3": "#A87001",
+  "-2": "#E69800",
+  "-1": "#FFD380",
+  "0": "#FFFF00",
+  "1": "#D0FF73",
+  "2": "#98E500",
+  "3": "#70A800",
+  // Lebih dari 3 dasarian
+  "4": "#70A800",
+  "5": "#70A800",
+  "6": "#70A800",
+  "7": "#70A800",
+  "8": "#70A800",
+  "9": "#70A800",
+  "-4": "#A87001",
+  "-5": "#A87001",
+  "-6": "#A87001",
+  "-7": "#A87001",
+  "-8": "#A87001",
+  "-9": "#A87001",
 };
 
 // Color map untuk Puncak Musim
 export const PUNCAK_MH_COLOR_MAP: Record<string, string> = {
+  // Nama lengkap
   "JANUARI": "#082698",
   "FEBRUARI": "#0A34BE",
   "MARET": "#0F4AFC",
@@ -118,9 +141,23 @@ export const PUNCAK_MH_COLOR_MAP: Record<string, string> = {
   "OKTOBER": "#10FE23",
   "NOVEMBER": "#0CBC1B",
   "DESEMBER": "#09950E",
+  // Singkatan
+  "JAN": "#082698",
+  "FEB": "#0A34BE",
+  "MAR": "#0F4AFC",
+  "APR": "#096A95",
+  "MEI3": "#0C8BC1",
+  "JUN": "#0FBAFE",
+  "JUL": "#9AFD0F",
+  "AGT": "#7BC50C",
+  "SEP": "#5B9409",
+  "OKT": "#10FE23",
+  "NOV": "#0CBC1B",
+  "DES": "#09950E",
 };
 
 export const PUNCAK_MK_COLOR_MAP: Record<string, string> = {
+  // Nama lengkap
   "JANUARI": "#FFB810",
   "FEBRUARI": "#D0920D",
   "MARET": "#966B0B",
@@ -133,6 +170,18 @@ export const PUNCAK_MK_COLOR_MAP: Record<string, string> = {
   "OKTOBER": "#960955",
   "NOVEMBER": "#D10E9B",
   "DESEMBER": "#FD0FBC",
+  // Singkatan
+  "JAN": "#FFB810",
+  "FEB": "#D0920D",
+  "MAR": "#966B0B",
+  "APR": "#FE7E10",
+  "JUN": "#954709",
+  "JUL": "#821308",
+  "AGT": "#C71D0C",
+  "SEP": "#FC260E",
+  "OKT": "#960955",
+  "NOV": "#D10E9B",
+  "DES": "#FD0FBC",
 };
 
 // Color map untuk Curah Hujan (by range)
