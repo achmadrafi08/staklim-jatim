@@ -41,13 +41,23 @@ const SEASON_CATEGORIES = [
     dbfInfo: "Kolom utama: NO_ZOM_NAS, NAMA_ZOM, Sifat_MK / SIFAT",
   },
   {
-    value: "perbandingan_musim",
-    label: "Prediksi Perbandingan Musim",
+    value: "perbandingan_musim_hujan",
+    label: "Perbandingan Musim Hujan",
+    icon: "compare",
+    color: "teal",
+    defaultColumn: "Mamun_PMH",
+    columns: ["Mamun_PMH", "Mamun_PMK", "PERB", "PERBANDINGAN", "BAND", "KET"],
+    description: "Upload data perbandingan awal musim hujan terhadap normal.",
+    dbfInfo: "Kolom utama: NO_ZOM_NAS, NAMA_ZOM, Mamun_PMH / Mamun_PMK",
+  },
+  {
+    value: "perbandingan_musim_kemarau",
+    label: "Perbandingan Musim Kemarau",
     icon: "compare",
     color: "teal",
     defaultColumn: "Mamun_PMK",
-    columns: ["Mamun_PMK", "PERB", "PERBANDINGAN", "BAND", "KET", "INFO"],
-    description: "Upload data perbandingan musim terhadap normal.",
+    columns: ["Mamun_PMK", "Mamun_PMH", "PERB", "PERBANDINGAN", "BAND", "KET"],
+    description: "Upload data perbandingan awal musim kemarau terhadap normal.",
     dbfInfo: "Kolom utama: NO_ZOM_NAS, NAMA_ZOM, Mamun_PMK / PERB",
   },
   {
@@ -89,7 +99,7 @@ const COLOR_MAP: Record<string, { bg: string; text: string; border: string; badg
 };
 
 // All category query
-const ALL_SEASON_QUERY = "or=(category.eq.awal_musim_hujan,category.eq.awal_musim_kemarau,category.eq.awal_musim,category.eq.sifat_musim,category.eq.perbandingan_musim,category.eq.puncak_musim,category.eq.curah_hujan_musim)&order=year.desc,month.desc,created_at.desc";
+const ALL_SEASON_QUERY = "or=(category.eq.awal_musim_hujan,category.eq.awal_musim_kemarau,category.eq.awal_musim,category.eq.sifat_musim,category.eq.perbandingan_musim,category.eq.perbandingan_musim_hujan,category.eq.perbandingan_musim_kemarau,category.eq.puncak_musim,category.eq.curah_hujan_musim)&order=year.desc,month.desc,created_at.desc";
 
 export function SeasonTab() {
   const confirm = useConfirm();

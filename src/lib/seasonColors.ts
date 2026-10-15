@@ -208,7 +208,39 @@ export function getBMKGSeasonColor(val: string | number | undefined, category?: 
     if (s.startsWith("N")) return SIFAT_COLOR_MAP["N"];
   }
 
-  // Perbandingan musim
+  // Perbandingan musim - AMK: plus=Mundur(hijau), minus=Maju(coklat)
+  if (category && category.includes("perbandingan") && category.includes("kemarau")) {
+    if (PERBANDINGAN_COLOR_MAP[s]) return PERBANDINGAN_COLOR_MAP[s];
+    // Numeric fallback: parse number and apply sign convention for AMK
+    const num = parseFloat(s);
+    if (!isNaN(num)) {
+      if (num >= 3) return "#70A800";
+      if (num === 2) return "#98E500";
+      if (num === 1) return "#D0FF73";
+      if (num === 0) return "#FFFF00";
+      if (num === -1) return "#FFD380";
+      if (num === -2) return "#E69800";
+      if (num <= -3) return "#A87001";
+    }
+  }
+
+  // Perbandingan musim - AMH: plus=Mundur(coklat), minus=Maju(hijau)
+  if (category && category.includes("perbandingan") && category.includes("hujan")) {
+    if (PERBANDINGAN_COLOR_MAP[s]) return PERBANDINGAN_COLOR_MAP[s];
+    // Numeric fallback: INVERTED sign convention for AMH
+    const num = parseFloat(s);
+    if (!isNaN(num)) {
+      if (num <= -3) return "#70A800";   // Maju AMH >= 3 = hijau
+      if (num === -2) return "#98E500";
+      if (num === -1) return "#D0FF73";
+      if (num === 0) return "#FFFF00";
+      if (num === 1) return "#FFD380";
+      if (num === 2) return "#E69800";
+      if (num >= 3) return "#A87001";    // Mundur AMH >= 3 = coklat
+    }
+  }
+
+  // Perbandingan musim - generic fallback (old category name)
   if (category && category.includes("perbandingan")) {
     if (PERBANDINGAN_COLOR_MAP[s]) return PERBANDINGAN_COLOR_MAP[s];
     for (const [key, hex] of Object.entries(PERBANDINGAN_COLOR_MAP)) {
