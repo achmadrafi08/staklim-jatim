@@ -159,14 +159,22 @@ export function SeasonMap({ forecast, categoryLabel }: SeasonMapProps) {
       const p = f.properties || {};
       const dataColumn = p._data_column;
       let label: string | undefined;
-      if (dataColumn && p[dataColumn]) {
-        label = String(p[dataColumn]);
-      } else if (cat.includes("curah_hujan")) {
-        label = p.curah_MK || p.CH || p.CURAH_HUJAN || p.ch || p.KET || p.ket || p.INFO || p.info;
-      } else if (cat.includes("perbandingan")) {
-        label = p.Mamun_PMH || p.Mamun_PMK || p.PERB || p.PERBANDINGAN || p.BAND || p.KET || p.ket;
-      } else {
-        label = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.SIFAT || p.sifat || p.Sifat_MK || p.PUNCAK || p.puncak || p.Puncak_MK || p.Mamun_PMK || p.curah_MK || p.PERB || p.CH || p.info || p.INFO || p.ket || p.KET;
+      if (dataColumn) {
+        // Coba exact match dulu, lalu case-insensitive scan
+        const rawVal = p[dataColumn] || (() => {
+          const actualKey = Object.keys(p).find(k => k.toLowerCase() === dataColumn.toLowerCase());
+          return actualKey ? p[actualKey] : undefined;
+        })();
+        if (rawVal) label = String(rawVal);
+      }
+      if (!label) {
+        if (cat.includes("curah_hujan")) {
+          label = p.Curah_MK || p.Curah_MH || p.curah_MK || p.curah_MH || p.CURAH_MK || p.CURAH_MH || p.CH || p.CURAH_HUJAN || p.ch || p.KET || p.ket || p.INFO || p.info;
+        } else if (cat.includes("perbandingan")) {
+          label = p.Mamun_PMH || p.Mamun_PMK || p.PERB || p.PERBANDINGAN || p.BAND || p.KET || p.ket;
+        } else {
+          label = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.SIFAT || p.sifat || p.Sifat_MK || p.PUNCAK || p.puncak || p.Puncak_MK || p.Mamun_PMK || p.curah_MK || p.PERB || p.CH || p.info || p.INFO || p.ket || p.KET;
+        }
       }
 
       if (label && typeof label === 'string' && label.trim() !== '') {
@@ -212,16 +220,21 @@ export function SeasonMap({ forecast, categoryLabel }: SeasonMapProps) {
     const cat = p._category || forecast?.category || "";
     const dataColumn = p._data_column;
     let val: string | undefined;
-    if (dataColumn && p[dataColumn]) {
-      val = String(p[dataColumn]);
-    } else if (cat.includes("curah_hujan")) {
-      // Untuk curah hujan, prioritaskan kolom nilai CH, bukan periode musim
-      val = p.curah_MK || p.CH || p.CURAH_HUJAN || p.ch || p.KET || p.ket || p.INFO || p.info;
-    } else if (cat.includes("perbandingan")) {
-      // Untuk perbandingan, prioritaskan Mamun_PMH / Mamun_PMK / PERB
-      val = p.Mamun_PMH || p.Mamun_PMK || p.PERB || p.PERBANDINGAN || p.BAND || p.KET || p.ket;
-    } else {
-      val = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.PERIODE || p.periode || p.SIFAT || p.sifat || p.Sifat_MK || p.PUNCAK || p.puncak || p.Puncak_MK || p.Mamun_PMK || p.curah_MK || p.PERB || p.CH || p.ZOM;
+    if (dataColumn) {
+      const rawVal = p[dataColumn] || (() => {
+        const actualKey = Object.keys(p).find(k => k.toLowerCase() === dataColumn.toLowerCase());
+        return actualKey ? p[actualKey] : undefined;
+      })();
+      if (rawVal) val = String(rawVal);
+    }
+    if (!val) {
+      if (cat.includes("curah_hujan")) {
+        val = p.Curah_MK || p.Curah_MH || p.curah_MK || p.curah_MH || p.CURAH_MK || p.CURAH_MH || p.CH || p.CURAH_HUJAN || p.ch || p.KET || p.ket || p.INFO || p.info;
+      } else if (cat.includes("perbandingan")) {
+        val = p.Mamun_PMH || p.Mamun_PMK || p.PERB || p.PERBANDINGAN || p.BAND || p.KET || p.ket;
+      } else {
+        val = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.PERIODE || p.periode || p.SIFAT || p.sifat || p.Sifat_MK || p.PUNCAK || p.puncak || p.Puncak_MK || p.Mamun_PMK || p.curah_MK || p.PERB || p.CH || p.ZOM;
+      }
     }
     // Always compute dynamically so color library changes take effect without re-upload
     const color = getBMKGSeasonColor(val, cat || forecast?.category);
@@ -244,14 +257,21 @@ export function SeasonMap({ forecast, categoryLabel }: SeasonMapProps) {
     const dataColumn = p._data_column;
     const cat = p._category || forecast?.category || "";
     let dataValue = "-";
-    if (dataColumn && p[dataColumn]) {
-      dataValue = String(p[dataColumn]);
-    } else if (cat.includes("curah_hujan")) {
-      dataValue = p.curah_MK || p.CH || p.CURAH_HUJAN || p.ch || p.KET || p.ket || p.INFO || p.info || "Belum ditentukan";
-    } else if (cat.includes("perbandingan")) {
-      dataValue = p.Mamun_PMH || p.Mamun_PMK || p.PERB || p.PERBANDINGAN || p.BAND || p.KET || p.ket || "Belum ditentukan";
-    } else {
-      dataValue = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.SIFAT || p.sifat || p.Sifat_MK || p.PUNCAK || p.puncak || p.Puncak_MK || p.Mamun_PMK || p.curah_MK || p.PERB || p.CH || p.AM || p.am || p.PERIODE || p.periode || p.KET || p.ket || p.INFO || p.info || "Belum ditentukan";
+    if (dataColumn) {
+      const rawVal = p[dataColumn] || (() => {
+        const actualKey = Object.keys(p).find(k => k.toLowerCase() === dataColumn.toLowerCase());
+        return actualKey ? p[actualKey] : undefined;
+      })();
+      if (rawVal) dataValue = String(rawVal);
+    }
+    if (dataValue === "-") {
+      if (cat.includes("curah_hujan")) {
+        dataValue = p.Curah_MK || p.Curah_MH || p.curah_MK || p.curah_MH || p.CURAH_MK || p.CURAH_MH || p.CH || p.CURAH_HUJAN || p.ch || p.KET || p.ket || p.INFO || p.info || "Belum ditentukan";
+      } else if (cat.includes("perbandingan")) {
+        dataValue = p.Mamun_PMH || p.Mamun_PMK || p.PERB || p.PERBANDINGAN || p.BAND || p.KET || p.ket || "Belum ditentukan";
+      } else {
+        dataValue = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.SIFAT || p.sifat || p.Sifat_MK || p.PUNCAK || p.puncak || p.Puncak_MK || p.Mamun_PMK || p.curah_MK || p.PERB || p.CH || p.AM || p.am || p.PERIODE || p.periode || p.KET || p.ket || p.INFO || p.info || "Belum ditentukan";
+      }
     }
 
     // Determine label for the main field

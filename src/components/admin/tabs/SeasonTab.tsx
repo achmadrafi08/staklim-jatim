@@ -75,10 +75,10 @@ const SEASON_CATEGORIES = [
     label: "Prediksi Curah Hujan Musim",
     icon: "water",
     color: "cyan",
-    defaultColumn: "curah_MK",
-    columns: ["curah_MK", "CH", "CURAH_HUJAN", "CURAHHUJAN", "RAIN", "KET"],
+    defaultColumn: "Curah_MK",
+    columns: ["Curah_MK", "Curah_MH", "curah_MK", "curah_MH", "CH", "CURAH_HUJAN", "CURAHHUJAN", "RAIN", "KET"],
     description: "Upload data prakiraan curah hujan musiman per ZOM.",
-    dbfInfo: "Kolom utama: NO_ZOM_NAS, NAMA_ZOM, curah_MK / CH",
+    dbfInfo: "Kolom utama: NO_ZOM_NAS, NAMA_ZOM, Curah_MK / Curah_MH / CH",
   },
 ];
 
@@ -207,24 +207,30 @@ export function SeasonTab() {
       if (geojson && geojson.features) {
         geojson.features.forEach((f: any) => {
           const p = f.properties || {};
-          // Try exact column first, then fallback columns
           const catConfig = getCategoryConfig(activeCategory);
           const allColumns = [effectiveColumn, ...(catConfig?.columns || [])];
           let val: string | undefined;
+          let foundColumn: string = effectiveColumn;
+
+          // Try exact match, then lowercase, then case-insensitive scan
           for (const col of allColumns) {
-            const v = p[col] || p[col.toLowerCase()];
-            if (v) { val = String(v); break; }
+            if (p[col]) { val = String(p[col]); foundColumn = col; break; }
+            if (p[col.toLowerCase()]) { val = String(p[col.toLowerCase()]); foundColumn = col.toLowerCase(); break; }
+            // Case-insensitive scan of actual keys
+            const actualKey = Object.keys(p).find(k => k.toLowerCase() === col.toLowerCase());
+            if (actualKey && p[actualKey]) { val = String(p[actualKey]); foundColumn = actualKey; break; }
           }
-          // Also try legacy columns for awal musim
+
+          // Fallback untuk awal musim
           if (!val) {
             val = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim;
           }
-          // Determine color
+
           const bmkgColor = getBMKGSeasonColor(val, activeCategory);
-          f.properties = { 
-            ...p, 
+          f.properties = {
+            ...p,
             fill_color: bmkgColor,
-            _data_column: effectiveColumn,
+            _data_column: foundColumn,  // simpan nama kolom yang benar-benar ditemukan
             _category: activeCategory,
           };
         });
