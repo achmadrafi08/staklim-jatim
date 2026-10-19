@@ -32,15 +32,15 @@ const LEGEND_AMK = [
   { kriteria: "Maju ≥3 Dasarian", color: "#A87001", nilai: "≤-3" },
 ];
 
-// Legenda untuk AMH (warna sama, kriteria terbalik)
+// Legenda untuk AMH: Mundur=COKLAT/ORANYE (lebih lambat dari normal), Maju=HIJAU (lebih awal dari normal)
 const LEGEND_AMH = [
-  { kriteria: "Maju ≥3 Dasarian", color: "#70A800", nilai: "≤-3" },
-  { kriteria: "Maju 2 Dasarian", color: "#98E500", nilai: "-2" },
-  { kriteria: "Maju 1 Dasarian", color: "#D0FF73", nilai: "-1" },
-  { kriteria: "Sama", color: "#FFFF00", nilai: "0" },
-  { kriteria: "Mundur 1 Dasarian", color: "#FFD380", nilai: "1" },
-  { kriteria: "Mundur 2 Dasarian", color: "#E69800", nilai: "2" },
   { kriteria: "Mundur ≥3 Dasarian", color: "#A87001", nilai: "≥3" },
+  { kriteria: "Mundur 2 Dasarian", color: "#E69800", nilai: "2" },
+  { kriteria: "Mundur 1 Dasarian", color: "#FFD380", nilai: "1" },
+  { kriteria: "Sama", color: "#FFFF00", nilai: "0" },
+  { kriteria: "Maju 1 Dasarian", color: "#D0FF73", nilai: "-1" },
+  { kriteria: "Maju 2 Dasarian", color: "#98E500", nilai: "-2" },
+  { kriteria: "Maju ≥3 Dasarian", color: "#70A800", nilai: "≤-3" },
 ];
 
 export default function PerbandinganMusimPage() {
