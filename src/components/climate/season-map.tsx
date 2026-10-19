@@ -161,15 +161,17 @@ export function SeasonMap({ forecast, categoryLabel }: SeasonMapProps) {
       let label: string | undefined;
       if (dataColumn && p[dataColumn]) {
         label = String(p[dataColumn]);
+      } else if (cat.includes("curah_hujan")) {
+        label = p.curah_MK || p.CH || p.CURAH_HUJAN || p.ch || p.KET || p.ket || p.INFO || p.info;
+      } else if (cat.includes("perbandingan")) {
+        label = p.Mamun_PMH || p.Mamun_PMK || p.PERB || p.PERBANDINGAN || p.BAND || p.KET || p.ket;
       } else {
         label = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.SIFAT || p.sifat || p.Sifat_MK || p.PUNCAK || p.puncak || p.Puncak_MK || p.Mamun_PMK || p.curah_MK || p.PERB || p.CH || p.info || p.INFO || p.ket || p.KET;
       }
-      const color = p.fill_color || p.FILL_COLOR || p.color || p.COLOR;
 
       if (label && typeof label === 'string' && label.trim() !== '') {
         const cleanLabel = label.trim();
         if (!itemsMap.has(cleanLabel)) {
-          // Always compute dynamically so color library changes take effect immediately
           const itemColor = getBMKGSeasonColor(cleanLabel, cat);
           itemsMap.set(cleanLabel, { label: cleanLabel, color: itemColor });
         }
@@ -212,6 +214,12 @@ export function SeasonMap({ forecast, categoryLabel }: SeasonMapProps) {
     let val: string | undefined;
     if (dataColumn && p[dataColumn]) {
       val = String(p[dataColumn]);
+    } else if (cat.includes("curah_hujan")) {
+      // Untuk curah hujan, prioritaskan kolom nilai CH, bukan periode musim
+      val = p.curah_MK || p.CH || p.CURAH_HUJAN || p.ch || p.KET || p.ket || p.INFO || p.info;
+    } else if (cat.includes("perbandingan")) {
+      // Untuk perbandingan, prioritaskan Mamun_PMH / Mamun_PMK / PERB
+      val = p.Mamun_PMH || p.Mamun_PMK || p.PERB || p.PERBANDINGAN || p.BAND || p.KET || p.ket;
     } else {
       val = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.AM || p.am || p.PERIODE || p.periode || p.SIFAT || p.sifat || p.Sifat_MK || p.PUNCAK || p.puncak || p.Puncak_MK || p.Mamun_PMK || p.curah_MK || p.PERB || p.CH || p.ZOM;
     }
@@ -238,6 +246,10 @@ export function SeasonMap({ forecast, categoryLabel }: SeasonMapProps) {
     let dataValue = "-";
     if (dataColumn && p[dataColumn]) {
       dataValue = String(p[dataColumn]);
+    } else if (cat.includes("curah_hujan")) {
+      dataValue = p.curah_MK || p.CH || p.CURAH_HUJAN || p.ch || p.KET || p.ket || p.INFO || p.info || "Belum ditentukan";
+    } else if (cat.includes("perbandingan")) {
+      dataValue = p.Mamun_PMH || p.Mamun_PMK || p.PERB || p.PERBANDINGAN || p.BAND || p.KET || p.ket || "Belum ditentukan";
     } else {
       dataValue = p.PMK || p.pmk || p.PMH || p.pmh || p.AWAL_MUSIM || p.awal_musim || p.SIFAT || p.sifat || p.Sifat_MK || p.PUNCAK || p.puncak || p.Puncak_MK || p.Mamun_PMK || p.curah_MK || p.PERB || p.CH || p.AM || p.am || p.PERIODE || p.periode || p.KET || p.ket || p.INFO || p.info || "Belum ditentukan";
     }

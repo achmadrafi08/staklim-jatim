@@ -200,13 +200,42 @@ export const PUNCAK_MK_COLOR_MAP: Record<string, string> = {
   "DES": "#FD0FBC",
 };
 
-// Color map untuk Curah Hujan (by range)
+// Color map untuk Curah Hujan Musim (by range mm) — standar BMKG
 export const CH_COLOR_MAP: Record<string, string> = {
-  "RENDAH": "#fcd34d",
-  "MENENGAH": "#34d399",
-  "TINGGI": "#2563eb",
-  "SANGAT TINGGI": "#1e3a8a",
+  // Nilai teks kategori
+  "SANGAT RENDAH": "#FFF9C4",
+  "RENDAH": "#FFD54F",
+  "MENENGAH": "#66BB6A",
+  "SEDANG": "#66BB6A",
+  "TINGGI": "#1976D2",
+  "SANGAT TINGGI": "#0D47A1",
+  // Range teks standar BMKG (mm/musim)
+  "<500": "#FFF9C4",
+  "500": "#FFF9C4",
+  "<501": "#FFF9C4",
+  "501-1000": "#FFD54F",
+  "501 - 1000": "#FFD54F",
+  "1001-1500": "#66BB6A",
+  "1001 - 1500": "#66BB6A",
+  "1501-2000": "#1976D2",
+  "1501 - 2000": "#1976D2",
+  "2001-2500": "#0D47A1",
+  "2001 - 2500": "#0D47A1",
+  ">2500": "#1A237E",
+  ">2500 ": "#1A237E",
+  // Variasi lain
+  "0-500": "#FFF9C4",
+  "0 - 500": "#FFF9C4",
 };
+
+// Fungsi helper: tentukan warna curah hujan berdasarkan nilai numerik (mm)
+function getCHColorByNumber(num: number): string {
+  if (num <= 500) return "#FFF9C4";          // < 500 mm: sangat rendah (kuning pucat)
+  if (num <= 1000) return "#FFD54F";         // 501–1000 mm: rendah (oranye/kuning)
+  if (num <= 1500) return "#66BB6A";         // 1001–1500 mm: menengah (hijau)
+  if (num <= 2000) return "#1976D2";         // 1501–2000 mm: tinggi (biru)
+  return "#0D47A1";                          // > 2000 mm: sangat tinggi (biru gelap)
+}
 
 export function getBMKGSeasonColor(val: string | number | undefined, category?: string): string {
   if (!val) return "#94a3b8";
@@ -285,12 +314,26 @@ export function getBMKGSeasonColor(val: string | number | undefined, category?: 
     }
   }
 
-  // Curah hujan musim
+  // Curah hujan musim — diprioritaskan sebelum fallback awal musim
   if (category && category.includes("curah_hujan")) {
+    // Cek teks dulu
     if (CH_COLOR_MAP[s]) return CH_COLOR_MAP[s];
     for (const [key, hex] of Object.entries(CH_COLOR_MAP)) {
       if (s.includes(key)) return hex;
     }
+    // Parse range "1001-1500" atau angka tunggal
+    const rangeMatch = s.match(/(\d+)\s*[-–]\s*(\d+)/);
+    if (rangeMatch) {
+      const mid = (parseInt(rangeMatch[1]) + parseInt(rangeMatch[2])) / 2;
+      return getCHColorByNumber(mid);
+    }
+    // Parse angka tunggal
+    const singleNum = parseFloat(s.replace(/[^0-9.]/g, ""));
+    if (!isNaN(singleNum) && singleNum > 0) {
+      return getCHColorByNumber(singleNum);
+    }
+    // Tidak dikenali → abu netral
+    return "#94a3b8";
   }
 
   const isKemarau = category && (category.includes("kemarau") || category.includes("amk"));
