@@ -65,7 +65,7 @@ export default function PetaPosPage() {
 
   return (
     <>
-<main className="min-h-screen bg-slate-50/70 pt-24 pb-16 w-full">
+<main className="min-h-screen bg-slate-50/70 pt-4 pb-16 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
           <BackButton fallbackHref="/pelayanan-publik/panduan-layanan" className="inline-flex items-center gap-1 text-primary hover:text-secondary font-medium mb-4 transition-colors cursor-pointer bg-transparent border-0 p-0">
             <span className="material-symbols-outlined text-[18px]">arrow_back</span>

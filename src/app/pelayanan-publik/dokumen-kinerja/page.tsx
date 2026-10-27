@@ -39,7 +39,7 @@ export default function DokumenKinerjaPage() {
 <main className="min-h-screen bg-slate-50 w-full overflow-hidden">
 
         {/* Hero Section */}
-        <section className="relative pt-24 pb-16 lg:pt-32 lg:pb-24 overflow-hidden bg-white">
+        <section className="relative pt-4 pb-16 lg:pt-8 lg:pb-24 overflow-hidden bg-white">
           <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 via-white to-orange-50/30"></div>
           <div className="max-w-5xl mx-auto px-6 relative z-10 text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-100/50 border border-amber-200 text-amber-700 text-xs font-bold mb-6">

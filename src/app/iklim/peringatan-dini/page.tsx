@@ -3,7 +3,7 @@ import { ClimatePublicationViewer } from "@/components/climate/ClimatePublicatio
 export default function PeringatanDiniPage() {
   return (
     <>
-<main className="min-h-screen bg-slate-50 pt-24 pb-12 w-full">
+<main className="min-h-screen bg-slate-50 pt-4 pb-12 w-full">
       <ClimatePublicationViewer 
         tableName="iklim_peringatan_dini" 
         title="Peringatan Dini Cuaca dan Iklim" 

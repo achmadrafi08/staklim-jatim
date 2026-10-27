@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function JamOperasionalPage() {
   return (
     <>
-<main className="min-h-screen bg-slate-50 pt-24 pb-16 w-full">
+<main className="min-h-screen bg-slate-50 pt-4 pb-16 w-full">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <BackButton fallbackHref="/pelayanan-publik/informasi-layanan" className="inline-flex items-center gap-1 text-primary hover:text-secondary font-medium mb-6 transition-colors cursor-pointer bg-transparent border-0 p-0">
             <span className="material-symbols-outlined text-[18px]">arrow_back</span>

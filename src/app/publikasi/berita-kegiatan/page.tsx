@@ -22,7 +22,7 @@ export default async function BeritaKegiatanPage() {
 
   return (
     <>
-<main className="min-h-screen bg-slate-50 pt-24 pb-12 w-full">
+<main className="min-h-screen bg-slate-50 pt-4 pb-12 w-full">
         <div className="max-w-4xl mx-auto px-6">
           <div className="mb-8">
             <h1 className="text-3xl md:text-4xl font-black text-slate-800 mb-2">Berita & Kegiatan</h1>

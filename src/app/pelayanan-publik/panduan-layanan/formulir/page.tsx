@@ -26,7 +26,7 @@ export default function FormulirPage() {
 
   return (
     <>
-<main className="min-h-screen bg-slate-50 pt-28 pb-16 flex items-center justify-center px-4">
+<main className="min-h-screen bg-slate-50 pt-4 pb-16 flex items-center justify-center px-4">
         <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-slate-200 shadow-xl text-center flex flex-col items-center">
           <div className="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4 border border-blue-100 shadow-xs">
             <span className="material-symbols-outlined text-[32px]">assignment</span>

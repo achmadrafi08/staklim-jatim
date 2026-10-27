@@ -93,7 +93,7 @@ export default function MediaSosialPage() {
     <>
 <main className="min-h-screen bg-slate-50 w-full overflow-hidden">
         {/* Hero Section */}
-        <section className="relative pt-24 sm:pt-32 pb-16 sm:pb-24 overflow-hidden bg-white">
+        <section className="relative pt-4 pb-16 sm:pb-24 overflow-hidden bg-white">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-white to-sky-50/30"></div>
           
           <div className="max-w-6xl mx-auto px-6 relative z-10 text-center">
