@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { H1, H2, Body } from "@/components/ui/typography";
 import { AnimatedContainer } from "@/components/ui/animated-container";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { WarmingStripesViewer } from "@/components/climate/warming-stripes-viewer";
 import { TemperatureMapSlider } from "@/components/climate/temperature-map-slider";
 import { parseCSVText, ClimateParsedResult } from "@/lib/climate-parser";
@@ -95,9 +93,7 @@ export default function PerubahanIklim() {
 
   return (
     <>
-      <Header activeRoute="/perubahan-iklim" />
-
-      <main className="flex-grow w-full max-w-7xl mx-auto px-4 md:px-[32px] py-[64px] space-y-[48px]">
+<main className="flex-grow w-full max-w-7xl mx-auto px-4 md:px-[32px] py-[64px] space-y-[48px]">
         {/* Judul */}
         <section className="space-y-[16px] max-w-3xl">
           <AnimatedContainer animation="slideInLeft" once={true}>
@@ -169,7 +165,6 @@ export default function PerubahanIklim() {
         </section>
       </main>
 
-      <Footer />
-    </>
+</>
   );
 }

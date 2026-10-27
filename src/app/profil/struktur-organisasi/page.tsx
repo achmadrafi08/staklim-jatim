@@ -1,15 +1,12 @@
 "use client";
 
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { AnimatedContainer } from "@/components/ui/animated-container";
 import { OrgChartViewer } from "@/components/profile/org-chart-viewer";
 
 export default function StrukturOrganisasiPage() {
   return (
     <>
-      <Header activeRoute="/profil/struktur-organisasi" />
-      <main className="flex-grow w-full max-w-7xl mx-auto px-4 md:px-[32px] py-[64px] flex flex-col gap-[64px]">
+<main className="flex-grow w-full max-w-7xl mx-auto px-4 md:px-[32px] py-[64px] flex flex-col gap-[64px]">
         
         {/* Struktur Organisasi Section */}
         <section className="w-full">
@@ -23,7 +20,6 @@ export default function StrukturOrganisasiPage() {
         </section>
         
       </main>
-      <Footer />
-    </>
+</>
   );
 }

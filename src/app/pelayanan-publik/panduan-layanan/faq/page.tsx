@@ -1,7 +1,5 @@
 "use client";
 
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { BackButton } from "@/components/ui/back-button";
 import { useState } from "react";
 
@@ -45,8 +43,7 @@ export default function FAQPage() {
 
   return (
     <>
-      <Header activeRoute="/pelayanan-publik/panduan-layanan/faq" />
-      <main className="min-h-screen bg-slate-50 pt-24 pb-24 w-full">
+<main className="min-h-screen bg-slate-50 pt-24 pb-24 w-full">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <BackButton fallbackHref="/pelayanan-publik/panduan-layanan" className="inline-flex items-center gap-1 text-primary hover:text-secondary font-medium mb-6 transition-colors cursor-pointer bg-transparent border-0 p-0">
             <span className="material-symbols-outlined text-[18px]">arrow_back</span>
@@ -106,8 +103,6 @@ export default function FAQPage() {
             </a>
           </div>
         </div>
-      </main>
-      <Footer />
-    </>
+      </main></>
   );
 }

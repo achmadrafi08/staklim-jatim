@@ -5,6 +5,7 @@ import "./globals.css";
 import { WhatsappFab } from "@/components/ui/whatsapp-fab";
 import { ToastProvider } from "@/components/ui/toast-provider";
 import { ConfirmProvider } from "@/components/ui/confirm-provider";
+import { MainLayoutWrapper } from "../components/layout/main-layout-wrapper";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -55,43 +56,51 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
           rel="stylesheet"
         />
-        <Script id="global-splash-remover" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: `
-          // Remove splash screen when fonts ready
-          document.fonts.ready.then(function() {
-            var splash = document.getElementById('global-splash-screen');
-            if (splash) {
-              setTimeout(function() {
-                splash.style.opacity = '0';
-                splash.style.pointerEvents = 'none';
-                setTimeout(function() { splash.style.display = 'none'; }, 500);
-              }, 800);
-            }
-          });
-
-          // Unregister any leftover service workers and clear cache storage
-          if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(registrations) {
-              for (var r of registrations) { r.unregister(); }
-            });
-            if ('caches' in window) {
-              caches.keys().then(function(names) {
-                for (var name of names) { caches.delete(name); }
+        <Script
+          id="global-splash-remover"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Remove splash screen when fonts ready
+              document.fonts.ready.then(function() {
+                var splash = document.getElementById('global-splash-screen');
+                if (splash) {
+                  setTimeout(function() {
+                    splash.style.opacity = '0';
+                    splash.style.pointerEvents = 'none';
+                    setTimeout(function() { splash.style.display = 'none'; }, 500);
+                  }, 800);
+                }
               });
-            }
-          }
-        ` }} />
+
+              // Unregister any leftover service workers and clear cache storage
+              if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                  for (var r of registrations) { r.unregister(); }
+                });
+                if ('caches' in window) {
+                  caches.keys().then(function(names) {
+                    for (var name of names) { caches.delete(name); }
+                  });
+                }
+              }
+            `,
+          }}
+        />
       </head>
       <body className="min-h-screen flex flex-col">
         <div id="global-splash-screen" suppressHydrationWarning className="fixed inset-0 z-[99999] bg-slate-50 flex flex-col items-center justify-center transition-opacity duration-500">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
           <p className="text-slate-500 font-medium animate-pulse">Mohon tunggu sebentar...</p>
         </div>
-        <ConfirmProvider>
-          <ToastProvider>
-            {children}
-            <WhatsappFab />
-          </ToastProvider>
-        </ConfirmProvider>
+          <MainLayoutWrapper>
+            <ConfirmProvider>
+              <ToastProvider>
+                {children}
+                <WhatsappFab />
+              </ToastProvider>
+            </ConfirmProvider>
+          </MainLayoutWrapper>
       </body>
     </html>
   );

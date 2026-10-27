@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { BackButton } from "@/components/ui/back-button";
 import { supabaseFetch, supabaseGetPublicUrl } from "@/lib/supabase";
 import { formatDescriptionHtml } from "@/lib/utils";
@@ -42,8 +40,7 @@ export default function BeritaKegiatanDetailPage() {
 
   return (
     <>
-      <Header activeRoute="/publikasi/berita-kegiatan" />
-      <main className="min-h-screen bg-slate-50 pt-24 pb-12 w-full">
+<main className="min-h-screen bg-slate-50 pt-24 pb-12 w-full">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <BackButton fallbackHref="/publikasi/berita-kegiatan" className="inline-flex items-center gap-1 text-primary hover:text-secondary font-medium mb-6 transition-colors cursor-pointer bg-transparent border-0 p-0">
             <span className="material-symbols-outlined text-[18px]">arrow_back</span>
@@ -109,7 +106,6 @@ export default function BeritaKegiatanDetailPage() {
           )}
         </div>
       </main>
-      <Footer />
-    </>
+</>
   );
 }

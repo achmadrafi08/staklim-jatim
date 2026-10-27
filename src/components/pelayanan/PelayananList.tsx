@@ -2,8 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
+
 import { supabaseFetch, supabaseGetPublicUrl } from "@/lib/supabase";
 import { PelayananPublik } from "@/types/admin";
 import { Pagination } from "@/components/ui/pagination";
@@ -73,8 +72,7 @@ export function PelayananList({
 
   return (
     <>
-      <Header activeRoute={basePath} />
-      <main className="min-h-screen bg-slate-50 pt-24 sm:pt-28 pb-16 w-full">
+      <main className="min-h-screen bg-slate-50 pb-16 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header Banner */}
           <div className="bg-gradient-to-br from-blue-900 via-slate-900 to-slate-800 text-white rounded-3xl p-6 sm:p-10 shadow-xl mb-8 relative overflow-hidden">
@@ -214,7 +212,6 @@ export function PelayananList({
           )}
         </div>
       </main>
-      <Footer />
     </>
   );
 }

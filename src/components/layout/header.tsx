@@ -61,57 +61,8 @@ export const navLinks: NavItem[] = [
       }
     ]
   },
-  {
-    label: "Pelayanan Publik",
-    href: "/pelayanan-publik",
-    subLinks: [
-      {
-        label: "Dokumen Kinerja",
-        href: "/pelayanan-publik/dokumen-kinerja",
-        subLinks: [
-          { href: "/pelayanan-publik/dokumen-kinerja/pk", label: "Perjanjian Kinerja (PK)" },
-          { href: "/pelayanan-publik/dokumen-kinerja/lkjip", label: "LKJIP" },
-          { href: "/pelayanan-publik/dokumen-kinerja/laporan-tahunan", label: "Laporan Tahunan" },
-          { href: "/pelayanan-publik/dokumen-kinerja/rkt", label: "RKT" },
-        ]
-      },
-      {
-        label: "Informasi Layanan",
-        href: "/pelayanan-publik/informasi-layanan",
-        subLinks: [
-          { href: "/pelayanan-publik/informasi-layanan/maklumat", label: "Maklumat Pelayanan" },
-          { href: "/pelayanan-publik/informasi-layanan/standar", label: "Standar Pelayanan" },
-          { href: "/pelayanan-publik/informasi-layanan/jenis", label: "Jenis Layanan" },
-          { href: "/pelayanan-publik/informasi-layanan/jam-operasional", label: "Jam Operasional Pelayanan" },
-        ]
-      },
-      {
-        label: "Panduan Layanan",
-        href: "/pelayanan-publik/panduan-layanan",
-        subLinks: [
-          { href: "/pelayanan-publik/panduan-layanan/alur", label: "Alur Pelayanan" },
-          { href: "/pelayanan-publik/panduan-layanan/formulir", label: "Formulir Permohonan Informasi" },
-          { href: "/pelayanan-publik/panduan-layanan/lacak", label: "Lacak Status Dokumen Anda" },
-          { href: "/pelayanan-publik/panduan-layanan/pnbp", label: "Jenis dan Tarif Layanan PNBP" },
-          { href: "/pelayanan-publik/panduan-layanan/tarif-nol", label: "Tarif Nol rupiah" },
-          { href: "https://ptsp.bmkg.go.id/", label: "PTSP BMKG Pusat", isExternal: true },
-          { href: "/pelayanan-publik/panduan-layanan/peta-pos", label: "Peta Sebaran Pos Hujan" },
-          { href: "/pelayanan-publik/panduan-layanan/faq", label: "FAQ" },
-        ]
-      },
-      {
-        label: "Pengaduan",
-        href: "/pelayanan-publik/pengaduan",
-        subLinks: [
-          { href: "https://www.lapor.go.id/", label: "SP4N LAPOR!", isExternal: true },
-          { href: "https://docs.google.com/forms/d/e/1FAIpQLScHygPWIQEjdlxp8Yv1hAdyQSvKzDzYiRP5vGDZGP2W6RxYAQ/viewform", label: "Survei Kepuasan Masyarakat", isExternal: true },
-          { href: "https://bit.ly/surveypresepsikorupsiKPO", label: "Survei Persepsi Anti Korupsi", isExternal: true },
-          { href: "https://wbs.bmkg.go.id/", label: "Whistleblowing System", isExternal: true },
-          { href: "https://docs.google.com/forms/d/e/1FAIpQLSfzolWmVwsvkYTjesQORdidf0dPiGTuuV_zXnF2E0ARdfdIuw/viewform", label: "Pengaduan Internal", isExternal: true },
-        ]
-      }
-    ]
-  },
+  { href: "/pelayanan-publik", label: "PPID" },
+
   {
     label: "Publikasi",
     href: "/publikasi",

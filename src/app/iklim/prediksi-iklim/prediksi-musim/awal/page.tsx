@@ -1,8 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { useState, useEffect } from "react";
 import { supabaseFetch } from "@/lib/supabase";
 import { CustomSelect } from "@/components/ui/CustomSelect";
@@ -59,9 +57,7 @@ export default function AwalMusimPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
-      <Header activeRoute="/iklim/prediksi-iklim/prediksi-musim/awal" />
-      
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-6 md:py-10 flex flex-col gap-6">
+<main className="flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-6 md:py-10 flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2 text-primary font-bold">
             <span className="material-symbols-outlined">calendar_today</span>
@@ -110,7 +106,6 @@ export default function AwalMusimPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+</div>
   );
 }

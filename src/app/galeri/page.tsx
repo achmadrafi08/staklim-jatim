@@ -5,8 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { InstagramIcon as Instagram } from "@/components/ui/instagram-icon";
 import { supabaseFetch } from "@/lib/supabase";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { getDirectImageUrl } from "@/lib/utils";
 
 export default function GaleriInstagram() {
@@ -29,9 +27,7 @@ export default function GaleriInstagram() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
-      <Header />
-      
-      <main className="flex-1 flex flex-col pt-[72px]">
+<main className="flex-1 flex flex-col pt-[72px]">
         <div className="bg-white border-b border-slate-200">
           <div className="max-w-7xl mx-auto px-6 md:px-8 py-8 md:py-12">
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
@@ -153,7 +149,6 @@ export default function GaleriInstagram() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+</div>
   );
 }

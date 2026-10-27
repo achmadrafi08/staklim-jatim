@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedContainer } from "@/components/ui/animated-container";
@@ -227,8 +225,7 @@ export default function PengamatanHarian() {
 
   return (
     <>
-      <Header activeRoute="/data-pengamatan" />
-      <main className="flex-grow w-full bg-slate-50/60 pb-16">
+<main className="flex-grow w-full bg-slate-50/60 pb-16">
         
         {/* Banner Section — Clean Professional Institutional Theme */}
         <section className="bg-gradient-to-r from-blue-50 via-slate-50 to-sky-50 text-slate-900 pt-8 md:pt-12 pb-16 md:pb-20 border-b border-slate-200/80 relative overflow-hidden">
@@ -551,7 +548,6 @@ export default function PengamatanHarian() {
         </section>
       </main>
 
-      <Footer />
-    </>
+</>
   );
 }

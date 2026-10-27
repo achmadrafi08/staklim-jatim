@@ -1,8 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { useState, useEffect } from "react";
 import { supabaseFetch } from "@/lib/supabase";
 import { CustomSelect } from "@/components/ui/CustomSelect";
@@ -57,9 +55,7 @@ export default function CurahHujanMusimPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
-      <Header activeRoute="/iklim/prediksi-iklim/prediksi-musim/curah-hujan" />
-
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-6 md:py-10 flex flex-col gap-6">
+<main className="flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-6 md:py-10 flex flex-col gap-6">
         {/* Page Header */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2 text-primary font-bold">
@@ -116,7 +112,6 @@ export default function CurahHujanMusimPage() {
         </div>
       </main>
 
-      <Footer />
-    </div>
+</div>
   );
 }

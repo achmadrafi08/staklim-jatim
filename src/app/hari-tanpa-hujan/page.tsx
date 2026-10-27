@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { supabaseGetPublicUrl } from "@/lib/supabase";
 
 // Import Map dynamically to avoid SSR issues with Leaflet
@@ -45,9 +43,7 @@ export default function HariTanpaHujanPage() {
 
   return (
     <main className="min-h-screen bg-slate-50/50 flex flex-col">
-      <Header activeRoute="/hari-tanpa-hujan" />
-      
-      <div className="flex-1 max-w-7xl mx-auto w-full px-4 md:px-8 py-8 flex flex-col">
+<div className="flex-1 max-w-7xl mx-auto w-full px-4 md:px-8 py-8 flex flex-col">
         <div className="text-center mb-8">
           <h2 className="text-2xl md:text-3xl font-extrabold text-[#003366] uppercase drop-shadow-sm mb-2">
             {judulHTH}
@@ -111,7 +107,6 @@ export default function HariTanpaHujanPage() {
         </div>
       </div>
       
-      <Footer />
-    </main>
+</main>
   );
 }

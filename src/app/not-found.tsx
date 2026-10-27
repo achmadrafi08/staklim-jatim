@@ -1,13 +1,9 @@
 import Link from "next/link";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 
 export default function NotFound() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
-      <Header />
-      
-      <main className="flex-1 flex flex-col items-center justify-center py-20 px-6 text-center pt-[100px] md:pt-[120px]">
+<main className="flex-1 flex flex-col items-center justify-center py-20 px-6 text-center pt-[100px] md:pt-[120px]">
         {/* Animated Construction Visual */}
         <div className="relative mb-8 flex justify-center items-center">
           <div className="absolute inset-0 bg-blue-100/50 blur-3xl rounded-full w-40 h-40 m-auto"></div>
@@ -41,7 +37,6 @@ export default function NotFound() {
         </Link>
       </main>
 
-      <Footer />
-    </div>
+</div>
   );
 }

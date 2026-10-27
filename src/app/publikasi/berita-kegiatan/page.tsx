@@ -1,5 +1,3 @@
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { supabaseFetch } from "@/lib/supabase";
 import { Metadata } from "next";
 import { BeritaKegiatanList } from "@/components/public/BeritaKegiatanList";
@@ -24,8 +22,7 @@ export default async function BeritaKegiatanPage() {
 
   return (
     <>
-      <Header activeRoute="/publikasi/berita-kegiatan" />
-      <main className="min-h-screen bg-slate-50 pt-24 pb-12 w-full">
+<main className="min-h-screen bg-slate-50 pt-24 pb-12 w-full">
         <div className="max-w-4xl mx-auto px-6">
           <div className="mb-8">
             <h1 className="text-3xl md:text-4xl font-black text-slate-800 mb-2">Berita & Kegiatan</h1>
@@ -36,7 +33,6 @@ export default async function BeritaKegiatanPage() {
           <BeritaKegiatanList initialData={data} />
         </div>
       </main>
-      <Footer />
-    </>
+</>
   );
 }

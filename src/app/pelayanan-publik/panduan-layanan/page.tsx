@@ -1,5 +1,3 @@
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import Link from "next/link";
 import { Metadata } from "next";
 
@@ -70,8 +68,7 @@ const panduanCards = [
 export default function PanduanLayananPage() {
   return (
     <>
-      <Header activeRoute="/pelayanan-publik/panduan-layanan" />
-      <main className="min-h-screen bg-slate-50 w-full overflow-hidden">
+<main className="min-h-screen bg-slate-50 w-full overflow-hidden">
         
         {/* Hero Section */}
         <section className="relative pt-24 pb-16 lg:pt-32 lg:pb-24 overflow-hidden bg-white">
@@ -133,8 +130,6 @@ export default function PanduanLayananPage() {
           </div>
         </section>
 
-      </main>
-      <Footer />
-    </>
+      </main></>
   );
 }

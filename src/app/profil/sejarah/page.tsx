@@ -1,5 +1,3 @@
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -55,8 +53,7 @@ const timelineData = [
 export default function SejarahPage() {
   return (
     <>
-      <Header activeRoute="/profil/sejarah" />
-      <main className="min-h-screen bg-slate-50 w-full overflow-hidden">
+<main className="min-h-screen bg-slate-50 w-full overflow-hidden">
         {/* Hero Banner - Light Theme Matching Data Pengamatan */}
         <section className="relative pt-32 pb-24 lg:pt-40 lg:pb-32 overflow-hidden bg-gradient-to-r from-blue-50 via-slate-50 to-sky-50 border-b border-slate-200/80">
           <div className="absolute inset-0 pointer-events-none">
@@ -173,7 +170,6 @@ export default function SejarahPage() {
         </section>
 
       </main>
-      <Footer />
-    </>
+</>
   );
 }

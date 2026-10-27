@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from "react";
+import Image from "next/image";
 import { useCrud } from "@/hooks/useCrud";
 import { useConfirm } from "@/components/ui/confirm-provider";
 import { useToast } from "@/components/ui/toast-provider";
@@ -9,46 +10,16 @@ import { supabaseUploadFile, supabaseGetPublicUrl } from "@/lib/supabase";
 import { Pagination } from "@/components/ui/pagination";
 import { PdfViewer } from "@/components/ui/pdf-viewer";
 import { ModalPortal } from "@/components/ui/ModalPortal";
+import { REGIONS, getRegionLogo } from "@/app/data/regions";
 
-export const KOTA_KABUPATEN_JATIM = [
-  "Kabupaten Bangkalan",
-  "Kabupaten Banyuwangi",
-  "Kabupaten Blitar",
-  "Kabupaten Bojonegoro",
-  "Kabupaten Bondowoso",
-  "Kabupaten Gresik",
-  "Kabupaten Jember",
-  "Kabupaten Jombang",
-  "Kabupaten Kediri",
-  "Kabupaten Lamongan",
-  "Kabupaten Lumajang",
-  "Kabupaten Madiun",
-  "Kabupaten Magetan",
-  "Kabupaten Malang",
-  "Kabupaten Mojokerto",
-  "Kabupaten Nganjuk",
-  "Kabupaten Ngawi",
-  "Kabupaten Pacitan",
-  "Kabupaten Pamekasan",
-  "Kabupaten Pasuruan",
-  "Kabupaten Ponorogo",
-  "Kabupaten Probolinggo",
-  "Kabupaten Sampang",
-  "Kabupaten Sidoarjo",
-  "Kabupaten Situbondo",
-  "Kabupaten Sumenep",
-  "Kabupaten Trenggalek",
-  "Kabupaten Tuban",
-  "Kabupaten Tulungagung",
-  "Kota Batu",
-  "Kota Blitar",
-  "Kota Kediri",
-  "Kota Madiun",
-  "Kota Malang",
-  "Kota Mojokerto",
-  "Kota Pasuruan",
-  "Kota Probolinggo",
-  "Kota Surabaya"
+// Daftar wilayah diambil langsung dari REGIONS agar sinkron dengan halaman publik.
+// Provinsi Jawa Timur diletakkan paling atas, sisanya diurutkan alfabetis.
+export const KOTA_KABUPATEN_JATIM: string[] = [
+  "Provinsi Jawa Timur",
+  ...REGIONS
+    .filter((r) => r.slug !== "jawa-timur")
+    .map((r) => r.name)
+    .sort((a, b) => a.localeCompare(b, "id")),
 ];
 
 export function EBuletinTab() {
@@ -112,6 +83,9 @@ export function EBuletinTab() {
     if (!q) return KOTA_KABUPATEN_JATIM;
     return KOTA_KABUPATEN_JATIM.filter((w) => w.toLowerCase().includes(q));
   }, [formData.wilayah]);
+
+  // Logo untuk wilayah yang sedang dipilih di form
+  const selectedLogoUrl = useMemo(() => getRegionLogo(formData.wilayah || ""), [formData.wilayah]);
 
   const handleOpenCreateForm = () => {
     setFormData({
@@ -318,8 +292,8 @@ export function EBuletinTab() {
                       setFormData({
                         ...formData,
                         wilayah: val,
-                        judul: !isEditing && (!formData.judul || formData.judul.startsWith("E-Buletin Informasi Iklim"))
-                          ? (val ? `E-Buletin Informasi Iklim ${val}` : "")
+                        judul: !isEditing && (!formData.judul || formData.judul.startsWith("E-Buletin Prakiraan Sifat dan Curah Hujan"))
+                          ? (val ? `E-Buletin Prakiraan Sifat dan Curah Hujan di ${val}` : "")
                           : formData.judul,
                       });
                     }}
@@ -351,8 +325,8 @@ export function EBuletinTab() {
                           setFormData({
                             ...formData,
                             wilayah: wil,
-                            judul: !isEditing && (!formData.judul || formData.judul.startsWith("E-Buletin Informasi Iklim"))
-                              ? `E-Buletin Informasi Iklim ${wil}`
+                            judul: !isEditing && (!formData.judul || formData.judul.startsWith("E-Buletin Prakiraan Sifat dan Curah Hujan"))
+                              ? `E-Buletin Prakiraan Sifat dan Curah Hujan di ${wil}`
                               : formData.judul,
                           });
                           setShowWilayahSuggestions(false);
@@ -369,8 +343,28 @@ export function EBuletinTab() {
                 )}
 
                 <p className="text-[11px] text-slate-400 mt-1.5">
-                  Ketik nama wilayah secara manual atau klik salah satu saran
+                  Nama wilayah harus sesuai dengan daftar resmi (cocok dengan halaman publik)
                 </p>
+
+                {/* Preview Logo Wilayah */}
+                {formData.wilayah && (
+                  <div className="mt-3 flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl p-3">
+                    <div className="w-10 h-10 rounded-lg bg-white border border-slate-100 flex items-center justify-center p-1 shrink-0">
+                      <Image
+                        src={selectedLogoUrl}
+                        alt={`Logo ${formData.wilayah}`}
+                        width={36}
+                        height={36}
+                        unoptimized
+                        className="object-contain w-full h-full"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-bold text-slate-700">{formData.wilayah}</p>
+                      <p className="text-[10px] text-slate-400">Logo akan tampil di halaman publik</p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Edisi Buletin */}
@@ -399,7 +393,7 @@ export function EBuletinTab() {
                   required
                   value={formData.judul || ""}
                   onChange={(e) => setFormData({ ...formData, judul: e.target.value })}
-                  placeholder="Contoh: E-Buletin Informasi Iklim Kabupaten Malang Edisi Agustus 2026"
+                  placeholder="Contoh: E-Buletin Prakiraan Sifat dan Curah Hujan di Kabupaten Malang"
                   className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm font-semibold rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                 />
               </div>

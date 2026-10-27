@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { BackButton } from "@/components/ui/back-button";
 
 // Import AloptamaMap dynamically to prevent Leaflet window SSR errors
@@ -67,8 +65,7 @@ export default function PetaPosPage() {
 
   return (
     <>
-      <Header activeRoute="/pelayanan-publik/panduan-layanan/peta-pos" />
-      <main className="min-h-screen bg-slate-50/70 pt-24 pb-16 w-full">
+<main className="min-h-screen bg-slate-50/70 pt-24 pb-16 w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
           <BackButton fallbackHref="/pelayanan-publik/panduan-layanan" className="inline-flex items-center gap-1 text-primary hover:text-secondary font-medium mb-4 transition-colors cursor-pointer bg-transparent border-0 p-0">
             <span className="material-symbols-outlined text-[18px]">arrow_back</span>
@@ -212,7 +209,6 @@ export default function PetaPosPage() {
 
         </div>
       </main>
-      <Footer />
-    </>
+</>
   );
 }

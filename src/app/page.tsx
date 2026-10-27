@@ -8,8 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedContainer } from "@/components/ui/animated-container";
 import { StationSlider } from "@/components/ui/station-slider";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
+
 import { supabaseFetch } from "@/lib/supabase";
 import { formatUTCtoWIB, getDirectImageUrl } from "@/lib/utils";
 import { FALLBACK_STATIONS } from "@/lib/constants";
@@ -354,7 +353,7 @@ export default function Home() {
 
   return (
     <>
-      <Header activeRoute="/" />
+
 
       <main className="flex-grow w-full overflow-x-hidden">
         {/* ═══════════════════════════════════════════════════ */}
@@ -803,7 +802,7 @@ export default function Home() {
         </section>
       </main>
 
-      <Footer />
+
     </>
   );
 }

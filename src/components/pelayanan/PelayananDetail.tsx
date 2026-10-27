@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
+
 import { BackButton } from "@/components/ui/back-button";
 import { supabaseFetch, supabaseGetPublicUrl } from "@/lib/supabase";
 import { PelayananPublik } from "@/types/admin";
@@ -58,8 +57,7 @@ export function PelayananDetail({
 
   return (
     <>
-      <Header activeRoute={basePath} />
-      <main className="min-h-screen bg-slate-50 pt-24 sm:pt-28 pb-16 w-full">
+      <main className="min-h-screen bg-slate-50 pb-16 w-full">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <BackButton fallbackHref={basePath} label="Kembali" />
 
@@ -160,7 +158,6 @@ export function PelayananDetail({
           )}
         </div>
       </main>
-      <Footer />
     </>
   );
 }

@@ -1,136 +1,277 @@
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
+"use client";
+
 import Link from "next/link";
-import { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Pelayanan Publik - BMKG Klimatologi Jawa Timur",
-  description: "Portal pelayanan publik Stasiun Klimatologi Kelas I Jawa Timur: informasi layanan, panduan permohonan data, dokumen kinerja, dan kanal pengaduan.",
-};
 
-const sections = [
+interface MenuItem {
+  label: string;
+  href: string;
+  desc?: string;
+  external?: boolean;
+}
+
+interface MenuCategory {
+  title: string;
+  icon: string;
+  items: MenuItem[];
+}
+
+const PPID_MENUS: MenuCategory[] = [
+
+  {
+    title: "Profil",
+    icon: "badge",
+    items: [
+      {
+        label: "Profil PPID",
+        href: "/pelayanan-publik/profil/profil-ppid",
+        desc: "Gambaran umum PPID Stasiun Klimatologi Jawa Timur",
+      },
+      {
+        label: "Tugas dan Fungsi",
+        href: "/pelayanan-publik/profil/tugas-dan-fungsi",
+        desc: "Tupoksi pengelola informasi dan dokumentasi",
+      },
+      {
+        label: "Struktur Pengelola",
+        href: "/pelayanan-publik/profil/struktur-pengelola",
+        desc: "Bagan susunan tim kerja dan pengelola PPID",
+      },
+    ],
+  },
   {
     title: "Informasi Layanan",
-    description: "Maklumat, standar, jenis layanan, dan jam operasional pelayanan publik BMKG Klimatologi Jawa Timur.",
     icon: "info",
-    href: "/pelayanan-publik/informasi-layanan",
-    color: "from-blue-500 to-indigo-600",
-    items: ["Maklumat Pelayanan", "Standar Pelayanan", "Jenis Layanan", "Jam Operasional"],
+    items: [
+      {
+        label: "Maklumat Pelayanan",
+        href: "/pelayanan-publik/informasi-layanan/maklumat",
+        desc: "Komitmen mutu penyelenggaraan layanan informasi",
+      },
+      {
+        label: "Standar Pelayanan",
+        href: "/pelayanan-publik/informasi-layanan/standar",
+        desc: "Pedoman baku persyaratan dan prosedur publik",
+      },
+      {
+        label: "Jenis Layanan",
+        href: "/pelayanan-publik/informasi-layanan/jenis",
+        desc: "Katalog ragam produk data dan jasa iklim",
+      },
+      {
+        label: "Jam Operasional Pelayanan",
+        href: "/pelayanan-publik/informasi-layanan/jam-operasional",
+        desc: "Jadwal loket pelayanan kantor & online",
+      },
+    ],
   },
   {
     title: "Panduan Layanan",
-    description: "Prosedur, alur, formulir permohonan, tarif PNBP, dan panduan lengkap untuk mengakses layanan kami.",
     icon: "menu_book",
-    href: "/pelayanan-publik/panduan-layanan",
-    color: "from-emerald-500 to-teal-600",
-    items: ["Alur Pelayanan", "Formulir Online", "Tarif PNBP", "FAQ"],
+    items: [
+      {
+        label: "Alur Pelayanan",
+        href: "/pelayanan-publik/panduan-layanan/alur",
+        desc: "Tahapan tata cara permohonan informasi publik",
+      },
+      {
+        label: "Formulir Permohonan Informasi",
+        href: "/pelayanan-publik/panduan-layanan/formulir",
+        desc: "Pengajuan permohonan data dan info iklim online",
+      },
+      {
+        label: "Lacak Status Dokumen",
+        href: "/pelayanan-publik/panduan-layanan/lacak-status",
+        desc: "Pantau proses berkas dan tiket permohonan Anda",
+      },
+      {
+        label: "Jenis & Tarif Layanan PNBP",
+        href: "/pelayanan-publik/panduan-layanan/tarif-pnbp",
+        desc: "Daftar tarif resmi penerimaan negara bukan pajak",
+      },
+      {
+        label: "Tarif Nol Rupiah",
+        href: "/pelayanan-publik/panduan-layanan/tarif-nol-rupiah",
+        desc: "Ketentuan bebas biaya pendidikan dan penelitian",
+      },
+      {
+        label: "PTSP BMKG Pusat",
+        href: "https://ptsp.bmkg.go.id",
+        external: true,
+        desc: "Portal Pelayanan Terpadu Satu Pintu Pusat",
+      },
+      {
+        label: "Peta Sebaran Pos Hujan",
+        href: "/pelayanan-publik/panduan-layanan/peta-pos",
+        desc: "Sebaran jaringan pos pengamatan ALOPTAMA",
+      },
+    ],
   },
   {
     title: "Dokumen Kinerja",
-    description: "Transparansi akuntabilitas kinerja melalui dokumen PK, LAKIP, dan RKT yang dapat diunduh publik.",
     icon: "folder_open",
-    href: "/pelayanan-publik/dokumen-kinerja",
-    color: "from-amber-500 to-orange-600",
-    items: ["Perjanjian Kinerja (PK)", "LAKIP", "RKT"],
+    items: [
+      {
+        label: "Perjanjian Kinerja (PK)",
+        href: "/pelayanan-publik/dokumen-kinerja/pk",
+        desc: "Sasaran target dan komitmen perjanjian kinerja tahunan",
+      },
+      {
+        label: "LKJIP",
+        href: "/pelayanan-publik/dokumen-kinerja/lkjip",
+        desc: "Laporan Kinerja Instansi Pemerintah Staklim Jatim",
+      },
+      {
+        label: "Laporan Tahunan",
+        href: "/pelayanan-publik/dokumen-kinerja/laporan-tahunan",
+        desc: "Akuntabilitas penyelenggaraan tugas selama satu tahun",
+      },
+      {
+        label: "Rencana Kinerja Tahunan (RKT)",
+        href: "/pelayanan-publik/dokumen-kinerja/rkt",
+        desc: "Dokumen perencanaan target kinerja tahunan satker",
+      },
+    ],
   },
   {
-    title: "Pengaduan & Survei",
-    description: "Sampaikan pengaduan, laporkan masalah, atau berikan penilaian terhadap kualitas pelayanan kami.",
+    title: "Kanal Pengaduan",
     icon: "campaign",
-    href: "/pelayanan-publik/pengaduan",
-    color: "from-rose-500 to-red-600",
-    items: ["SP4N LAPOR!", "Survei Kepuasan", "Whistleblowing"],
+    items: [
+      {
+        label: "SP4N LAPOR!",
+        href: "https://www.lapor.go.id",
+        external: true,
+        desc: "Layanan aspirasi & pengaduan online rakyat",
+      },
+      {
+        label: "Survei Kepuasan Masyarakat",
+        href: "/pelayanan-publik/pengaduan/skm",
+        desc: "Evaluasi berkala kepuasan pelayanan publik",
+      },
+      {
+        label: "Survei Persepsi Anti Korupsi",
+        href: "/pelayanan-publik/pengaduan/spak",
+        desc: "Penilaian indeks integritas dan anti korupsi",
+      },
+      {
+        label: "Whistleblowing System (WBS)",
+        href: "https://wbs.bmkg.go.id",
+        external: true,
+        desc: "Sistem pelaporan dugaan pelanggaran internal",
+      },
+      {
+        label: "Pengaduan Internal",
+        href: "/pelayanan-publik/pengaduan/internal",
+        desc: "Kanal pengaduan langsung ke kepatuhan internal",
+      },
+    ],
   },
 ];
 
 export default function PelayananPublikPage() {
+
   return (
-    <>
-      <Header activeRoute="/pelayanan-publik" />
-      <main className="min-h-screen bg-slate-50 w-full overflow-hidden">
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-800 antialiased">
+      {/* ═══════════════════════════════════════════════════ */}
+      {/* 3. BREADCRUMBS                                      */}
+      {/* ═══════════════════════════════════════════════════ */}
+      <div className="bg-slate-50 border-b border-slate-200 py-2.5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-xs text-slate-500 flex items-center gap-1.5">
+          <Link href="/" className="hover:text-blue-600">
+            Beranda
+          </Link>
+          <span>›</span>
+          <span className="text-slate-800 font-semibold">PPID</span>
+        </div>
+      </div>
 
-        {/* Hero Section */}
-        <section className="relative pt-28 pb-20 lg:pt-36 lg:pb-28 overflow-hidden bg-slate-900">
-          <div className="absolute inset-0">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/40 via-slate-900/80 to-slate-900"></div>
-            <div className="absolute inset-0 opacity-[0.04] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-          </div>
+      {/* ═══════════════════════════════════════════════════ */}
+      {/* 4. ISI UTAMA HALAMAN PPID                           */}
+      {/* ═══════════════════════════════════════════════════ */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow w-full space-y-10">
 
-          <div className="max-w-5xl mx-auto px-6 relative z-10 text-center">
-            <span className="inline-block py-1.5 px-4 rounded-full bg-blue-500/20 text-blue-300 font-bold tracking-widest uppercase text-xs mb-6 border border-blue-400/30 backdrop-blur-sm">
-              Portal Layanan Publik
+        {/* Banner Selamat Datang Sederhana */}
+        <div className="bg-[#0b2847] text-white rounded-2xl p-8 sm:p-10 shadow-sm relative overflow-hidden">
+          <div className="max-w-3xl relative z-10">
+            <span className="text-xs font-bold text-sky-300 uppercase tracking-widest block mb-2">
+              Layanan Informasi & Dokumentasi Publik
             </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 tracking-tight leading-tight">
-              Pelayanan <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-sky-300">Publik</span>
-            </h1>
-            <p className="text-slate-300 max-w-3xl mx-auto text-base sm:text-lg leading-relaxed">
-              Komitmen Stasiun Klimatologi Kelas I Jawa Timur untuk menghadirkan layanan informasi iklim yang <strong className="text-white">Cepat, Tepat, Akurat, Luas, dan Mudah Dipahami</strong>.
+            <h2 className="text-2xl sm:text-3xl font-extrabold mb-3 tracking-tight">
+              Keterbukaan Informasi Publik BMKG Jawa Timur
+            </h2>
+            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              Selamat datang di portal resmi PPID Stasiun Klimatologi Jawa Timur. Portal ini disediakan untuk mempermudah masyarakat dalam memperoleh informasi iklim, dokumen transparansi kinerja pemerintah, standar pelayanan operasional, serta penyampaian pengaduan masyarakat.
             </p>
           </div>
-        </section>
+        </div>
 
-        {/* Sections Grid */}
-        <section className="py-16 sm:py-24 relative z-20 -mt-8">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-              {sections.map((section, idx) => (
-                <Link
-                  key={idx}
-                  href={section.href}
-                  className="group relative bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl border border-slate-100 hover:border-transparent transition-all duration-300 flex flex-col h-full overflow-hidden"
-                >
-                  {/* Background glow */}
-                  <div className={`absolute top-0 right-0 w-40 h-40 bg-gradient-to-br ${section.color} opacity-5 rounded-full blur-3xl group-hover:scale-[2] group-hover:opacity-10 transition-all duration-500 -mr-10 -mt-10`}></div>
-
-                  {/* Icon + Title */}
-                  <div className="flex items-start gap-5 mb-5 relative z-10">
-                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-to-br ${section.color} text-white shadow-lg shrink-0 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300`}>
-                      <span className="material-symbols-outlined text-[28px]">{section.icon}</span>
-                    </div>
-                    <div>
-                      <h2 className="text-2xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
-                        {section.title}
-                      </h2>
-                      <p className="text-slate-500 text-sm leading-relaxed mt-1">
-                        {section.description}
-                      </p>
-                    </div>
+        {/* Kotak Menu Layanan Utama (5 Kategori) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {PPID_MENUS.map((category) => (
+            <div
+              key={category.title}
+              className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs flex flex-col justify-between hover:border-blue-300 hover:shadow-md transition-all"
+            >
+              <div>
+                <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 mb-4">
+                  <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
+                    <span className="material-symbols-outlined text-[18px]">
+                      {category.icon}
+                    </span>
                   </div>
+                  <h3 className="text-sm font-extrabold text-[#0b2847]">
+                    {category.title}
+                  </h3>
+                </div>
 
-                  {/* Quick Links */}
-                  <div className="flex flex-wrap gap-2 mt-auto relative z-10">
-                    {section.items.map((item, i) => (
-                      <span key={i} className="text-xs font-semibold bg-slate-50 text-slate-500 px-3 py-1 rounded-lg border border-slate-100">
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Arrow */}
-                  <div className="absolute bottom-6 right-6 w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                    <span className="material-symbols-outlined text-[20px] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
-                  </div>
-                </Link>
-              ))}
+                <ul className="space-y-3">
+                  {category.items.map((item) => (
+                    <li key={item.label}>
+                      <Link
+                        href={item.href}
+                        target={item.external ? "_blank" : undefined}
+                        rel={item.external ? "noreferrer" : undefined}
+                        className="group flex flex-col"
+                      >
+                        <div className="flex items-center justify-between text-xs font-semibold text-slate-700 group-hover:text-blue-700 transition-colors">
+                          <span>{item.label}</span>
+                          <span className="material-symbols-outlined text-[14px] text-slate-400 group-hover:text-blue-700 group-hover:translate-x-0.5 transition-all">
+                            {item.external ? "open_in_new" : "chevron_right"}
+                          </span>
+                        </div>
+                        {item.desc && (
+                          <span className="text-[11px] text-slate-400 mt-0.5 line-clamp-1">
+                            {item.desc}
+                          </span>
+                        )}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-          </div>
-        </section>
+          ))}
+        </div>
 
-        {/* Motto BMKG */}
-        <section className="py-16 bg-white border-t border-slate-100">
-          <div className="max-w-4xl mx-auto px-6 text-center">
-            <div className="inline-flex items-center gap-3 bg-blue-50 px-6 py-4 rounded-2xl border border-blue-100 mb-6">
-              <span className="material-symbols-outlined text-blue-600 text-3xl">verified</span>
-              <span className="text-blue-800 font-bold text-lg">Zona Integritas — Wilayah Bebas Korupsi</span>
-            </div>
-            <p className="text-slate-500 max-w-2xl mx-auto leading-relaxed">
-              BMKG berkomitmen mewujudkan Wilayah Bebas dari Korupsi (WBK) dan Wilayah Birokrasi Bersih dan Melayani (WBBM) demi pelayanan publik yang optimal dan berintegritas.
-            </p>
+        {/* Maklumat Pelayanan */}
+        <div className="border border-slate-200 rounded-xl p-6 sm:p-8 bg-white text-center max-w-4xl mx-auto shadow-xs">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-800 text-xs font-extrabold uppercase tracking-wider mb-3">
+            <span className="material-symbols-outlined text-[16px]">verified</span>
+            Maklumat Pelayanan
           </div>
-        </section>
-
+          <blockquote className="text-sm sm:text-base text-slate-700 italic font-medium leading-relaxed max-w-2xl mx-auto">
+            &ldquo;Dengan ini kami menyatakan sanggup menyelenggarakan pelayanan sesuai standar pelayanan yang telah ditetapkan dan apabila tidak menepati janji ini, kami siap menerima sanksi sesuai ketentuan peraturan perundang-undangan yang berlaku.&rdquo;
+          </blockquote>
+          <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider mt-3">
+            Kepala Stasiun Klimatologi Kelas I Jawa Timur
+          </p>
+        </div>
       </main>
-      <Footer />
-    </>
+
+      {/* ═══════════════════════════════════════════════════ */}
+      {/* 5. FOOTER RESMI SITUS                               */}
+      {/* ═══════════════════════════════════════════════════ */}
+
+    </div>
   );
 }

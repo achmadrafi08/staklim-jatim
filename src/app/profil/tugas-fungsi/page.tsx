@@ -1,14 +1,11 @@
 "use client";
 
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { AnimatedContainer } from "@/components/ui/animated-container";
 
 export default function TugasFungsiPage() {
   return (
     <>
-      <Header activeRoute="/profil/tugas-fungsi" />
-      <main className="flex-grow w-full max-w-7xl mx-auto px-4 md:px-[32px] py-[64px] flex flex-col gap-[64px]">
+<main className="flex-grow w-full max-w-7xl mx-auto px-4 md:px-[32px] py-[64px] flex flex-col gap-[64px]">
         
         <section className="max-w-4xl mx-auto w-full">
           <AnimatedContainer animation="fadeInUp" once={true}>
@@ -66,7 +63,6 @@ export default function TugasFungsiPage() {
         </section>
         
       </main>
-      <Footer />
-    </>
+</>
   );
 }

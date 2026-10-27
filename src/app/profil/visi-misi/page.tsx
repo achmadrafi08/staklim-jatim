@@ -1,14 +1,11 @@
 "use client";
 
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { AnimatedContainer } from "@/components/ui/animated-container";
 
 export default function VisiMisiPage() {
   return (
     <>
-      <Header activeRoute="/profil/visi-misi" />
-      <main className="flex-grow w-full max-w-7xl mx-auto px-4 md:px-[32px] py-[64px] flex flex-col gap-[64px]">
+<main className="flex-grow w-full max-w-7xl mx-auto px-4 md:px-[32px] py-[64px] flex flex-col gap-[64px]">
         
         {/* Visi Section */}
         <section className="max-w-4xl mx-auto text-center">
@@ -81,7 +78,6 @@ export default function VisiMisiPage() {
         </section>
         
       </main>
-      <Footer />
-    </>
+</>
   );
 }
