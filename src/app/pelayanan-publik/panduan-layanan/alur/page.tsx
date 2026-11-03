@@ -43,8 +43,8 @@ const alurSteps = [
   },
   {
     step: 6,
-    title: "Penyerahan Data",
-    description: "Data yang telah selesai akan disahkan oleh Pejabat berwenang, kemudian diserahkan kepada pemohon melalui sistem SIPADU.",
+    title: "Penyerahan Data dan Pengisian Kuesioner",
+    description: "Data yang telah selesai akan disahkan oleh Pejabat berwenang, kemudian diserahkan kepada pemohon melalui sistem SIPADU. Pemohon juga diminta mengisi kuesioner survei kepuasan masyarakat sebagai bahan evaluasi pelayanan.",
     icon: "check_circle",
     color: "from-emerald-500 to-emerald-600"
   }

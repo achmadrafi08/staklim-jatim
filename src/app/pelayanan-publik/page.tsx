@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 
-
 interface MenuItem {
   label: string;
   href: string;
@@ -17,30 +16,29 @@ interface MenuCategory {
 }
 
 const PPID_MENUS: MenuCategory[] = [
-
   {
-    title: "Profil",
-    icon: "badge",
+    title: "Profil PPID",
+    icon: "account_balance",
     items: [
-      {
-        label: "Profil PPID",
-        href: "/pelayanan-publik/profil/profil-ppid",
-        desc: "Gambaran umum PPID Stasiun Klimatologi Jawa Timur",
-      },
-      {
-        label: "Tugas dan Fungsi",
-        href: "/pelayanan-publik/profil/tugas-dan-fungsi",
-        desc: "Tupoksi pengelola informasi dan dokumentasi",
-      },
-      {
-        label: "Struktur Pengelola",
-        href: "/pelayanan-publik/profil/struktur-pengelola",
-        desc: "Bagan susunan tim kerja dan pengelola PPID",
-      },
+      { label: "Profil", href: "/pelayanan-publik/profil" },
+      { label: "Visi, Misi, Tugas dan Fungsi", href: "/pelayanan-publik/profil/visi-misi-tusi" },
+      { label: "Struktur Organisasi PPID", href: "https://ppid.bmkg.go.id/struktur-organisasi", external: true },
     ],
   },
   {
-    title: "Informasi Layanan",
+    title: "Informasi Publik",
+    icon: "public",
+    items: [
+      { label: "Daftar Informasi Publik", href: "https://ppid.bmkg.go.id/daftar-informasi-publik", external: true },
+      { label: "Informasi Publik Secara Berkala", href: "#" },
+      { label: "Informasi Publik Setiap Saat", href: "#" },
+      { label: "Informasi Publik Serta Merta", href: "#" },
+      { label: "Informasi Yang Dikecualikan", href: "https://ppid.bmkg.go.id/daftar-informasi-yang-dikecualikan", external: true }
+    ],
+  },
+  {
+
+    title: "Standar Layanan",
     icon: "info",
     items: [
       {
@@ -169,11 +167,10 @@ const PPID_MENUS: MenuCategory[] = [
 ];
 
 export default function PelayananPublikPage() {
-
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-800 antialiased">
       {/* ═══════════════════════════════════════════════════ */}
-      {/* 3. BREADCRUMBS                                      */}
+      {/* BREADCRUMBS                                         */}
       {/* ═══════════════════════════════════════════════════ */}
       <div className="bg-slate-50 border-b border-slate-200 py-2.5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-xs text-slate-500 flex items-center gap-1.5">
@@ -186,10 +183,9 @@ export default function PelayananPublikPage() {
       </div>
 
       {/* ═══════════════════════════════════════════════════ */}
-      {/* 4. ISI UTAMA HALAMAN PPID                           */}
+      {/* ISI UTAMA HALAMAN PPID                              */}
       {/* ═══════════════════════════════════════════════════ */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 flex-grow w-full space-y-6 sm:space-y-10">
-
         {/* Banner Selamat Datang Sederhana */}
         <div className="bg-[#0b2847] text-white rounded-xl sm:rounded-2xl p-5 sm:p-8 lg:p-10 shadow-sm relative overflow-hidden">
           <div className="max-w-3xl relative z-10">
@@ -260,18 +256,17 @@ export default function PelayananPublikPage() {
             Maklumat Pelayanan
           </div>
           <blockquote className="text-sm sm:text-base text-slate-700 italic font-medium leading-relaxed max-w-2xl mx-auto">
-            &ldquo;Dengan ini kami menyatakan sanggup menyelenggarakan pelayanan sesuai standar pelayanan yang telah ditetapkan dan apabila tidak menepati janji ini, kami siap menerima sanksi sesuai ketentuan peraturan perundang-undangan yang berlaku.&rdquo;
+        <blockquote className="text-sm sm:text-base text-slate-700 italic font-medium leading-relaxed max-w-2xl mx-auto">
+  Dengan ini, kami Stasiun Klimatologi Jawa Timur menyatakan sanggup menyelenggarakan pelayanan informasi klimatologi secara profesional, akurat, cepat, transparan, dan berintegritas, sesuai dengan standar pelayanan yang telah ditetapkan.<br/>
+  Kami berkomitmen untuk senantiasa berfokus pada kebutuhan dan harapan pelanggan, serta memastikan kepuasan pelanggan dipertahankan dan ditingkatkan secara berkelanjutan melalui penerapan dan perbaikan berkesinambungan.<br/>
+  Apabila kami tidak menepati janji ini, kami siap menerima sanksi sesuai dengan ketentuan peraturan perundang-undangan yang berlaku.
+</blockquote>
           </blockquote>
           <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider mt-3">
             Kepala Stasiun Klimatologi Kelas I Jawa Timur
           </p>
         </div>
       </main>
-
-      {/* ═══════════════════════════════════════════════════ */}
-      {/* 5. FOOTER RESMI SITUS                               */}
-      {/* ═══════════════════════════════════════════════════ */}
-
     </div>
   );
 }

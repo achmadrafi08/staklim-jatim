@@ -18,9 +18,9 @@ export const PELAYANAN_CATEGORIES = [
   { id: "lkjip", label: "LKJIP", type: "pdf", icon: "analytics", group: "Dokumen Kinerja" },
   { id: "laporan-tahunan", label: "Laporan Tahunan", type: "pdf", icon: "book", group: "Dokumen Kinerja" },
   { id: "rkt", label: "Rencana Kinerja Tahunan", type: "pdf", icon: "event_note", group: "Dokumen Kinerja" },
-  { id: "maklumat", label: "Maklumat Pelayanan", type: "image", icon: "badge", group: "Informasi Layanan" },
-  { id: "standar", label: "Standar Pelayanan", type: "image", icon: "verified", group: "Informasi Layanan" },
-  { id: "jenis", label: "Jenis Layanan", type: "image_text", icon: "category", group: "Informasi Layanan" },
+  { id: "maklumat", label: "Maklumat Pelayanan", type: "image", icon: "badge", group: "Standar Layanan" },
+  { id: "standar", label: "Standar Pelayanan", type: "image", icon: "verified", group: "Standar Layanan" },
+  { id: "jenis", label: "Jenis Layanan", type: "image_text", icon: "category", group: "Standar Layanan" },
   { id: "pnbp", label: "Jenis & Tarif Layanan PNBP", type: "image_text", icon: "payments", group: "Panduan Layanan" },
   { id: "tarif-nol", label: "Tarif Nol Rupiah", type: "image", icon: "money_off", group: "Panduan Layanan" },
 ];
@@ -54,7 +54,7 @@ export function PelayananPublikTab() {
     setIsSavingLinks(false);
 
     if (ok) {
-      success("Link layanan (SIPADU, Formulir, Lacak) berhasil diperbarui!");
+      success("Semua link layanan berhasil diperbarui!");
       setIsLinksModalOpen(false);
     } else {
       error("Gagal menyimpan link layanan ke database.");
@@ -383,9 +383,9 @@ export function PelayananPublikTab() {
                       { value: "lkjip", label: "📁 Dokumen Kinerja - LKJIP" },
                       { value: "laporan-tahunan", label: "📁 Dokumen Kinerja - Laporan Tahunan" },
                       { value: "rkt", label: "📁 Dokumen Kinerja - Rencana Kinerja Tahunan (RKT)" },
-                      { value: "maklumat", label: "ℹ️ Informasi Layanan - Maklumat Pelayanan" },
-                      { value: "standar", label: "ℹ️ Informasi Layanan - Standar Pelayanan" },
-                      { value: "jenis", label: "ℹ️ Informasi Layanan - Jenis Layanan" },
+                      { value: "maklumat", label: "ℹ️ Standar Layanan - Maklumat Pelayanan" },
+                      { value: "standar", label: "ℹ️ Standar Layanan - Standar Pelayanan" },
+                      { value: "jenis", label: "ℹ️ Standar Layanan - Jenis Layanan" },
                       { value: "pnbp", label: "📖 Panduan Layanan - Jenis & Tarif Layanan PNBP" },
                       { value: "tarif-nol", label: "📖 Panduan Layanan - Tarif Nol Rupiah" }
                     ]}
@@ -916,6 +916,106 @@ export function PelayananPublikTab() {
                   />
                   <p className="text-[10px] text-slate-400">
                     Tautan saat pemohon mengklik menu &quot;Lacak Status Dokumen&quot; di portal publik.
+                  </p>
+                </div>
+
+                {/* Section separator for Kanal Pengaduan */}
+                <div className="flex items-center gap-3 pt-2">
+                  <div className="h-px flex-1 bg-slate-200"></div>
+                  <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Kanal Pengaduan</span>
+                  <div className="h-px flex-1 bg-slate-200"></div>
+                </div>
+
+                {/* 4. Survei Kepuasan Masyarakat */}
+                <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/70 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-black text-slate-700 flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[17px] text-emerald-600">rate_review</span>
+                      Link Survei Kepuasan Masyarakat (SKM)
+                    </label>
+                    <a
+                      href={serviceLinks.surveiSKM}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[11px] font-bold text-emerald-600 hover:underline flex items-center gap-0.5"
+                    >
+                      <span>Uji Buka</span>
+                      <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                    </a>
+                  </div>
+                  <input
+                    type="url"
+                    required
+                    disabled={!canEditLinks || isSavingLinks}
+                    value={serviceLinks.surveiSKM}
+                    onChange={(e) => setServiceLinks({ ...serviceLinks, surveiSKM: e.target.value })}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-mono text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all disabled:bg-slate-100 disabled:text-slate-500"
+                    placeholder="https://docs.google.com/forms/..."
+                  />
+                  <p className="text-[10px] text-slate-400">
+                    Tautan formulir survei kepuasan masyarakat di halaman Kanal Pengaduan.
+                  </p>
+                </div>
+
+                {/* 5. Survei Persepsi Anti Korupsi */}
+                <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/70 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-black text-slate-700 flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[17px] text-purple-600">gavel</span>
+                      Link Survei Persepsi Anti Korupsi (SPAK)
+                    </label>
+                    <a
+                      href={serviceLinks.surveiSPAK}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[11px] font-bold text-purple-600 hover:underline flex items-center gap-0.5"
+                    >
+                      <span>Uji Buka</span>
+                      <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                    </a>
+                  </div>
+                  <input
+                    type="url"
+                    required
+                    disabled={!canEditLinks || isSavingLinks}
+                    value={serviceLinks.surveiSPAK}
+                    onChange={(e) => setServiceLinks({ ...serviceLinks, surveiSPAK: e.target.value })}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-mono text-slate-800 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all disabled:bg-slate-100 disabled:text-slate-500"
+                    placeholder="https://bit.ly/..."
+                  />
+                  <p className="text-[10px] text-slate-400">
+                    Tautan formulir survei persepsi anti korupsi di halaman Kanal Pengaduan.
+                  </p>
+                </div>
+
+                {/* 6. Pengaduan Internal */}
+                <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/70 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-black text-slate-700 flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[17px] text-amber-600">feedback</span>
+                      Link Pengaduan Internal
+                    </label>
+                    <a
+                      href={serviceLinks.pengaduanInternal}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[11px] font-bold text-amber-600 hover:underline flex items-center gap-0.5"
+                    >
+                      <span>Uji Buka</span>
+                      <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                    </a>
+                  </div>
+                  <input
+                    type="url"
+                    required
+                    disabled={!canEditLinks || isSavingLinks}
+                    value={serviceLinks.pengaduanInternal}
+                    onChange={(e) => setServiceLinks({ ...serviceLinks, pengaduanInternal: e.target.value })}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-mono text-slate-800 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all disabled:bg-slate-100 disabled:text-slate-500"
+                    placeholder="https://docs.google.com/forms/..."
+                  />
+                  <p className="text-[10px] text-slate-400">
+                    Tautan formulir pengaduan internal bagi pegawai BMKG di halaman Kanal Pengaduan.
                   </p>
                 </div>
 

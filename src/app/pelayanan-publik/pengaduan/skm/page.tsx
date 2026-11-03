@@ -1,11 +1,17 @@
 "use client";
 
-import { useEffect } from "react";
-const SKM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScHygPWIQEjdlxp8Yv1hAdyQSvKzDzYiRP5vGDZGP2W6RxYAQ/viewform";
+import { useEffect, useState } from "react";
+import { fetchServiceLinks, DEFAULT_SERVICE_LINKS } from "@/lib/service-links";
 
 export default function SkmPage() {
+  const [url, setUrl] = useState(DEFAULT_SERVICE_LINKS.surveiSKM);
+
   useEffect(() => {
-    window.location.href = SKM_URL;
+    fetchServiceLinks().then((links) => {
+      const target = links.surveiSKM || DEFAULT_SERVICE_LINKS.surveiSKM;
+      setUrl(target);
+      window.location.href = target;
+    });
   }, []);
 
   return (
@@ -20,13 +26,13 @@ export default function SkmPage() {
             Sedang mengalihkan Anda ke formulir Survei Kepuasan Masyarakat (SKM) BMKG Jawa Timur...
           </p>
           <a
-            href={SKM_URL}
+            href={url}
             className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 text-sm"
           >
             <span>Buka Formulir SKM</span>
             <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
           </a>
         </div>
-      </main></>
+      </main></>
   );
 }

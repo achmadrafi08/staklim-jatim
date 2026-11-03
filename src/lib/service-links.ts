@@ -4,12 +4,18 @@ export interface ServiceLinks {
   sipaduAdmin: string;
   formulirPermohonan: string;
   lacakStatus: string;
+  surveiSKM: string;
+  surveiSPAK: string;
+  pengaduanInternal: string;
 }
 
 export const DEFAULT_SERVICE_LINKS: ServiceLinks = {
   sipaduAdmin: "https://script.google.com/macros/s/AKfycbyYH9biqvAWfUKkmwvENg7gVw3amiWz_IIgO2UkQhj0yI2mY-_U-ekChvmRubuUQEv1/exec?p=admin",
   formulirPermohonan: "https://script.google.com/macros/s/AKfycbyYH9biqvAWfUKkmwvENg7gVw3amiWz_IIgO2UkQhj0yI2mY-_U-ekChvmRubuUQEv1/exec?p=daftar",
   lacakStatus: "https://script.google.com/macros/s/AKfycbyYH9biqvAWfUKkmwvENg7gVw3amiWz_IIgO2UkQhj0yI2mY-_U-ekChvmRubuUQEv1/exec?p=client",
+  surveiSKM: "https://docs.google.com/forms/d/e/1FAIpQLScHygPWIQEjdlxp8Yv1hAdyQSvKzDzYiRP5vGDZGP2W6RxYAQ/viewform",
+  surveiSPAK: "https://bit.ly/surveypresepsikorupsiKPO",
+  pengaduanInternal: "https://docs.google.com/forms/d/e/1FAIpQLSfzolWmVwsvkYTjesQORdidf0dPiGTuuV_zXnF2E0ARdfdIuw/viewform",
 };
 
 const LOCAL_STORAGE_KEY = "bmkg_service_links_cache";
@@ -30,6 +36,9 @@ export function getStoredServiceLinks(): ServiceLinks {
         sipaduAdmin: parsed.sipaduAdmin || DEFAULT_SERVICE_LINKS.sipaduAdmin,
         formulirPermohonan: parsed.formulirPermohonan || DEFAULT_SERVICE_LINKS.formulirPermohonan,
         lacakStatus: parsed.lacakStatus || DEFAULT_SERVICE_LINKS.lacakStatus,
+        surveiSKM: parsed.surveiSKM || DEFAULT_SERVICE_LINKS.surveiSKM,
+        surveiSPAK: parsed.surveiSPAK || DEFAULT_SERVICE_LINKS.surveiSPAK,
+        pengaduanInternal: parsed.pengaduanInternal || DEFAULT_SERVICE_LINKS.pengaduanInternal,
       };
     }
   } catch (_) {}
@@ -55,6 +64,12 @@ export async function fetchServiceLinks(): Promise<ServiceLinks> {
           result.formulirPermohonan = row.file_url;
         } else if (row.judul === "lacak_status" && row.file_url) {
           result.lacakStatus = row.file_url;
+        } else if (row.judul === "survei_skm" && row.file_url) {
+          result.surveiSKM = row.file_url;
+        } else if (row.judul === "survei_spak" && row.file_url) {
+          result.surveiSPAK = row.file_url;
+        } else if (row.judul === "pengaduan_internal" && row.file_url) {
+          result.pengaduanInternal = row.file_url;
         }
       });
 
@@ -100,6 +115,9 @@ export async function saveServiceLinks(links: ServiceLinks): Promise<boolean> {
       { key: "sipadu_admin", url: links.sipaduAdmin, label: "Link Portal Sipadu Admin" },
       { key: "formulir_permohonan", url: links.formulirPermohonan, label: "Link Formulir Permohonan Informasi" },
       { key: "lacak_status", url: links.lacakStatus, label: "Link Lacak Status Dokumen" },
+      { key: "survei_skm", url: links.surveiSKM, label: "Link Survei Kepuasan Masyarakat" },
+      { key: "survei_spak", url: links.surveiSPAK, label: "Link Survei Persepsi Anti Korupsi" },
+      { key: "pengaduan_internal", url: links.pengaduanInternal, label: "Link Pengaduan Internal" },
     ];
 
     for (const item of entries) {
@@ -111,6 +129,7 @@ export async function saveServiceLinks(links: ServiceLinks): Promise<boolean> {
         });
       } else {
         await supabaseInsert("pelayanan_publik", {
+          id: Date.now() + Math.floor(Math.random() * 1000),
           kategori: "service_links",
           judul: item.key,
           file_url: item.url,

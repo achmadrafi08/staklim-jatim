@@ -47,7 +47,7 @@ export default function JamOperasionalPage() {
                   <div className="flex items-baseline gap-2 mb-2">
                     <span className="text-3xl sm:text-4xl font-black text-blue-600">08:00</span>
                     <span className="text-slate-300 font-bold">-</span>
-                    <span className="text-3xl sm:text-4xl font-black text-blue-600">16:00</span>
+                    <span className="text-3xl sm:text-4xl font-black text-blue-600">15:30</span>
                     <span className="text-sm font-bold text-slate-400 ml-1">WIB</span>
                   </div>
                   
@@ -64,7 +64,7 @@ export default function JamOperasionalPage() {
                   <div className="flex items-baseline gap-2 mb-2">
                     <span className="text-3xl sm:text-4xl font-black text-blue-600">08:00</span>
                     <span className="text-slate-300 font-bold">-</span>
-                    <span className="text-3xl sm:text-4xl font-black text-blue-600">16:30</span>
+                    <span className="text-3xl sm:text-4xl font-black text-blue-600">16:00</span>
                     <span className="text-sm font-bold text-slate-400 ml-1">WIB</span>
                   </div>
                   
@@ -103,7 +103,7 @@ export default function JamOperasionalPage() {
               <div className="bg-white border-2 border-slate-100 rounded-2xl p-6 text-center shadow-sm">
                 <span className="inline-block bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">Lokasi Pelayanan</span>
                 <p className="text-slate-800 font-black text-lg mb-1">Stasiun Klimatologi Kelas I Jawa Timur</p>
-                <p className="text-slate-500 text-sm">Jl. Raya Ngijo No. 25, Kec. Karangploso, Kabupaten Malang, Jawa Timur 65152</p>
+                <p className="text-slate-500 text-sm">Jl. Zentana No. 33, Desa Ngijo, Kec. Karangploso, Kabupaten Malang, Jawa Timur 65152</p>
               </div>
 
             </div>

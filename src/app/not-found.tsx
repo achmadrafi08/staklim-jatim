@@ -29,7 +29,7 @@ export default function NotFound() {
           Mohon maaf, halaman atau fitur yang Anda tuju saat ini masih dalam tahap perancangan dan pengembangan. Kami sedang berusaha menghadirkan layanan ini secepatnya.
         </p>
 
-        <Link href="/" scroll={true} onClick={() => window.scrollTo(0,0)}>
+        <Link href="/" scroll={true}>
           <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3.5 rounded-full transition-all hover:-translate-y-1 hover:shadow-xl shadow-blue-600/30 flex items-center gap-2 outline-none focus:ring-4 focus:ring-blue-600/20 active:scale-95">
             <span className="material-symbols-outlined text-[20px]">home</span>
             Kembali ke Beranda

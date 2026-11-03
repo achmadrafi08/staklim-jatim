@@ -61,7 +61,7 @@ export const navLinks: NavItem[] = [
       }
     ]
   },
-  { href: "/pelayanan-publik", label: "PPID" },
+
 
   {
     label: "Publikasi",
@@ -82,6 +82,7 @@ export const navLinks: NavItem[] = [
     ]
   },
   { href: "https://website-edu-klim-83ao.vercel.app/", label: "Edukasi Iklim", isExternal: true },
+    { href: "/pelayanan-publik", label: "Pelayanan Publik" },
   {
     label: "Profil",
     href: "/profil",
