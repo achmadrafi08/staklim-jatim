@@ -219,18 +219,24 @@ export function PelayananPublikTab() {
 
       const payload: Partial<PelayananPublik> = {
         kategori: formData.kategori,
-        judul: formData.judul.trim(),
+        judul: formData.judul?.trim() || "",
         file_url: finalFileUrl,
         deskripsi: formData.deskripsi || "",
         penulis: formData.penulis?.trim() || "",
         updated_at: new Date().toISOString(),
       };
 
+      // add created_at and id only for new records
+      if (!isEditing) {
+        payload.created_at = new Date().toISOString();
+        payload.id = Date.now() + Math.floor(Math.random() * 1000);
+      }
+
       let res = false;
       if (isEditing && formData.id) {
         res = await update(formData.id, payload, "Data Pelayanan Publik berhasil diperbarui!");
       } else {
-        payload.created_at = new Date().toISOString();
+        // `created_at` already set above for new records
         res = await add(payload, "Data Pelayanan Publik berhasil ditambahkan!");
       }
 
