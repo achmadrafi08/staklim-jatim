@@ -12,7 +12,7 @@ export interface ServiceLinks {
 export const DEFAULT_SERVICE_LINKS: ServiceLinks = {
   sipaduAdmin: "https://script.google.com/macros/s/AKfycbyYH9biqvAWfUKkmwvENg7gVw3amiWz_IIgO2UkQhj0yI2mY-_U-ekChvmRubuUQEv1/exec?p=admin",
   formulirPermohonan: "https://script.google.com/macros/s/AKfycbyYH9biqvAWfUKkmwvENg7gVw3amiWz_IIgO2UkQhj0yI2mY-_U-ekChvmRubuUQEv1/exec?p=daftar",
-  lacakStatus: "https://script.google.com/macros/s/AKfycbyYH9biqvAWfUKkmwvENg7gVw3amiWz_IIgO2UkQhj0yI2mY-_U-ekChvmRubuUQEv1/exec?p=client",
+  lacakStatus: "https://script.google.com/a/macros/bmkg.go.id/s/AKfycbzvSsB2Xltcnl2KEu-u9Hnu-J-vkHfy91FOsj53nbiwTcsSAN0zv8Swve819IL3LWI_/exec?p=client",
   surveiSKM: "https://docs.google.com/forms/d/e/1FAIpQLScHygPWIQEjdlxp8Yv1hAdyQSvKzDzYiRP5vGDZGP2W6RxYAQ/viewform",
   surveiSPAK: "https://bit.ly/surveypresepsikorupsiKPO",
   pengaduanInternal: "https://docs.google.com/forms/d/e/1FAIpQLSfzolWmVwsvkYTjesQORdidf0dPiGTuuV_zXnF2E0ARdfdIuw/viewform",

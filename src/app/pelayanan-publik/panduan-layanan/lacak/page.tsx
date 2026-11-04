@@ -4,25 +4,28 @@ import { useEffect, useState } from "react";
 import { fetchServiceLinks, getStoredServiceLinks, DEFAULT_SERVICE_LINKS } from "@/lib/service-links";
 
 export default function LacakPage() {
-  const [lacakUrl, setLacakUrl] = useState<string>(() => getStoredServiceLinks().lacakStatus);
+  const [lacakUrl, setLacakUrl] = useState<string>('');
 
   useEffect(() => {
     let isMounted = true;
-    fetchServiceLinks().then(links => {
-      if (isMounted) {
-        setLacakUrl(links.lacakStatus);
-        window.location.href = links.lacakStatus;
-      }
-    }).catch(() => {
-      if (isMounted) {
-        window.location.href = lacakUrl || DEFAULT_SERVICE_LINKS.lacakStatus;
-      }
-    });
-
+    fetchServiceLinks()
+      .then((links) => {
+        if (isMounted) {
+          setLacakUrl(links.lacakStatus);
+          window.location.href = links.lacakStatus;
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          const fallback = DEFAULT_SERVICE_LINKS.lacakStatus;
+          setLacakUrl(fallback);
+          window.location.href = fallback;
+        }
+      });
     return () => {
       isMounted = false;
     };
-  }, [lacakUrl]);
+  }, []);
 
   return (
     <>
